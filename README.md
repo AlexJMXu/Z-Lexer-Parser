@@ -3,6 +3,9 @@
 ## Building
 To build, issue `make`.
 
+## Run
+
+
 ## Testing
 To test, issue `make test`.
 
