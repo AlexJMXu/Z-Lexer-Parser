@@ -17,8 +17,6 @@ import java_cup.runtime.*;
   StringBuffer string = new StringBuffer();
 
   private void print_lexeme(int type, Object value){
-      if(!debug()){ return; }
-
       System.out.print("<");
       switch(type){
         case sym.INTEGER:
@@ -95,7 +93,7 @@ import java_cup.runtime.*;
         case sym.UNDERSCORE:
             System.out.print("_"); break;
         case sym.IDENTIFIER:
-            System.out.printf("IDENT %s", value); break;
+            System.out.printf("IDENTIFIER %s", value); break;
         case sym.L_BRACKET:
             System.out.print("<"); break;
         case sym.R_BRACKET:
@@ -126,14 +124,19 @@ import java_cup.runtime.*;
             System.out.print("&&"); break;
         case sym.OR:
             System.out.print("||"); break;
+        default:
+            System.out.format("[%d]", type);
+            break;
       }
       System.out.print(">  ");
     }
 
   private Symbol symbol(int type) {
+    print_lexeme(type, null);
     return new Symbol(type, yyline, yycolumn);
   }
   private Symbol symbol(int type, Object value) {
+    print_lexeme(type, value);
     return new Symbol(type, yyline, yycolumn, value);
   }
 %}
@@ -211,7 +214,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "_"                             { return symbol(sym.UNDERSCORE); }
 
     /* identifiers */
-    {Identifier}                    { return symbol(sym.IDENTIFIER); }
+    {Identifier}                    { return symbol(sym.IDENTIFIER, yytext() ); }
 
     "<"                             { return symbol(sym.L_BRACKET); }
     ">"                             { return symbol(sym.R_BRACKET); }
@@ -237,10 +240,10 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "||"                            { return symbol(sym.OR); }
 
     /* comments */
-    {Comment}                       { /* ignore */ }
+    {Comment}                       { System.out.println("Found a comment"); }
 
     /* whitespace */
-    {WhiteSpace}                    { /* ignore */ }
+    {WhiteSpace}                    { System.out.println("whitespace");  }
 }
 
 <STRING> {
@@ -259,7 +262,6 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     \'                      { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, string.toString()); }
     {SingleCharacter}       { string.append( yytext() ); }
     [^]                     { throw new Error("Illegal character, character has to be surrounded in '' <" + yytext() + ">"); }
-
 }
 
 /* error fallback */

@@ -8,14 +8,15 @@ class SC {
     	Lexer lexer;
 		try {
 			lexer = new Lexer(new FileReader(args[0]));
+			lexer.debug(true);
+
 			try {
 				Parser parser = new Parser(lexer);
+				parser.debug(true);
+
+				System.out.println("digraph G {");
 				Symbol result = parser.parse();
-				if(!parser.syntaxErrors){
-					System.out.println("parsing successful");
-				}
-				
-				
+				System.out.println("}");
 			} catch (Exception e) {
 				// Commented out because this output is uniformative.  ETB
 				//e.printStackTrace();
