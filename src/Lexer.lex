@@ -25,8 +25,8 @@ import java_cup.runtime.*;
             System.out.print("bool"); break;
         case sym.CHARACTER:
             System.out.print("char"); break;
-        case sym.STRING:
-            System.out.print("string"); break;
+        case sym.STRING_LITERAL:
+            System.out.print("STRING_LITERAL %s", value); break;
         case sym.RATIONAL:
             System.out.print("rat"); break;
         case sym.FLOAT:
