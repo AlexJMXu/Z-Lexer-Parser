@@ -18,7 +18,7 @@ import java_cup.runtime.*;
 
   private void print_lexeme(int type, Object value){
       System.out.print("<");
-      switch(type){
+      switch(type) {
         case sym.INTEGER:
             System.out.print("int"); break;
         case sym.BOOLEAN:
@@ -37,7 +37,6 @@ import java_cup.runtime.*;
             System.out.print("seq"); break;
         case sym.VOID:
             System.out.print("void"); break;
-
         case sym.TOP:
             System.out.print("top"); break;
         case sym.TRUE:
@@ -153,15 +152,15 @@ TraditionalComment   = "/#" [^#] ~"#/" | "/#" "#" + "/"
 EndOfLineComment     = "#" {InputCharacter}* {LineTerminator}?
 
 /* Union jletterdigit character class with underscore */
-alphanumericUnderscore = [[:jletterdigit:]||"_"]
-Identifier = [:jletter:] [:alphanumericUnderscore:]*
+alphanumericUnderscore = [:jletterdigit:] | "_"
+Identifier = [:jletter:] {alphanumericUnderscore}*
 
 /*
 A character is a single letter, punctuation symbol, or digit wrapped in ’’ and has type char. The allowed
 punctuation symbols are space (See http://en.wikipedia.org/wiki/Punctuation) and the ASCII
 symbols, other than digits, on this page http://www.kerryr.net/pioneers/ascii3.htm.
 */
-SingleCharacter = [[:jletterdigit:]|| \p{Punctuation}]
+SingleCharacter = [:jletterdigit:] | \p{Punctuation}
 
 DecIntegerLiteral = 0 | [1-9][0-9]*
 
@@ -247,22 +246,22 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 }
 
 <STRING> {
-  \"                             { yybegin(YYINITIAL);
-                                   return symbol(sym.STRING_LITERAL, string.toString()); }
-  [^\n\r\"\\]+                   { string.append( yytext() ); }
-  \\t                            { string.append('\t'); }
-  \\n                            { string.append('\n'); }
+  \"                                { yybegin(YYINITIAL);
+                                      return symbol(sym.STRING_LITERAL, string.toString()); }
+  [^\n\r\"\\]+                      { string.append( yytext() ); }
+  \\t                               { string.append('\t'); }
+  \\n                               { string.append('\n'); }
 
-  \\r                            { string.append('\r'); }
-  \\\"                           { string.append('\"'); }
-  \\                             { string.append('\\'); }
+  \\r                               { string.append('\r'); }
+  \\\"                              { string.append('\"'); }
+  \\                                { string.append('\\'); }
 }
 
 <CHAR> {
-    \'                      { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, string.toString()); }
-    {SingleCharacter}       { string.append( yytext() ); }
-    [^]                     { throw new Error("Illegal character, character has to be surrounded in '' <" + yytext() + ">"); }
+    \'                              { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, string.toString()); }
+    {SingleCharacter}               { string.append( yytext() ); }
+    [^]                             { throw new Error("Illegal character, character has to be surrounded in '' <" + yytext() + ">"); }
 }
 
 /* error fallback */
-[^]                              { throw new Error("Illegal character <" + yytext() + ">"); }
+[^]                                 { throw new Error("Illegal character <" + yytext() + ">"); }
