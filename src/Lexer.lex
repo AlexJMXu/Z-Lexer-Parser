@@ -116,7 +116,7 @@ import java_cup.runtime.*;
         case sym.R_PAREN:
             System.out.print(")"); break;
         case sym.NUMBER_LITERAL:
-            System.out.printf("Number %d", value); break;
+            System.out.printf("Number %s", value); break;
         case sym.NEGATION:
             System.out.print("!"); break;
         case sym.AND:
@@ -228,7 +228,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     ")"                             { return symbol(sym.R_PAREN); }
 
     /* literals */
-    {DecIntegerLiteral}             { return symbol(sym.NUMBER_LITERAL); }
+    {DecIntegerLiteral}             { return symbol(sym.NUMBER_LITERAL, yytext() ); }
     \"                              { string.setLength(0); yybegin(STRING); }
     \'                              { string.setLength(0); yybegin(CHAR); }
 
