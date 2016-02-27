@@ -1,0 +1,101 @@
+import java_cup.runtime.*;
+import java.util.ArrayList;
+
+scan with {: return lexer.next_token(); :};
+
+parser code {:
+
+  private boolean debug = false;
+  public boolean  debug()         {return debug;}
+  public void     debug(boolean b){debug = b;}
+
+  static class Node {
+    public ArrayList<Node> children;
+    private static int globalCounter = 0;
+
+    public int counter;
+    private Object value;
+
+    public Node(Object value){
+      Node.globalCounter += 1;
+      this.counter = Node.globalCounter;
+      this.value = value;
+      this.children = new ArrayList<Node>();
+    }
+
+    public void addChild(Node n){ children.add(n); }
+
+    public String toString(){
+      String ret = "";
+      ret += String.format("%d [label=\"%s\"];\n",
+                            counter, value.toString());
+      for(Node n: children){
+        ret += String.format("%d -> %d;\n", this.counter, n.counter);
+        ret += n.toString();
+      }
+      return ret;
+    }
+  }
+
+  private Lexer lexer;
+
+  public Parser(Lexer lex) {
+    super(lex);
+    lexer = lex;
+  }
+
+:};
+
+// Do something with ILLEGAL_CHARARCTER or drop it.
+terminal INTEGER, BOOLEAN, CHARACTER, STRING, RATIONAL, FLOAT, DICTIONARY, SEQUENCE, VOID, TOP, TRUE, FALSE, IN, ALIAS, TYPEDEF, WHILE, IF, THEN, ELSE, ELSE_IF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN, EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, COMMA, COLON, SEMI_COLON, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN, NUMBER_LITERAL, NEGATION, AND, OR, STRING_LITERAL, CHAR_LITERAL;
+
+nonterminal statements, statement, top_level;
+nonterminal full_exp, simple_exp, operator;
+
+precedence left PLUS, MINUS;
+precedence left SLASH, MULT;
+
+top_level ::= statements:ss {:
+                if(debug()) System.out.println((Node)ss);
+              :}
+            ;
+
+statements ::= statements:ss statement:s {:
+                  Node n = (Node)ss;
+                  n.addChild((Node)s);
+                  RESULT = n;
+               :}
+             | /* empty */ {:
+                  RESULT = new Node("Statements");
+               :}
+             ;
+
+statement ::= full_exp:s {:
+                RESULT = (Node)s;
+              :}
+            ;
+
+full_exp ::= simple_exp:e SEMI_COLON {: RESULT = (Node)e; :};
+
+simple_exp ::= INTEGER:i    {: RESULT = new Node(i); :}
+             | IDENTIFIER:i {: RESULT = new Node(i); :}
+             | simple_exp:e1 operator:o simple_exp:e2 {:
+                  Node n = (Node)o;
+                  n.addChild((Node)e1);
+                  n.addChild((Node)e2);
+                  RESULT = n;
+               :}
+             | L_PAREN simple_exp:e R_PAREN {:
+                 Node n = new Node("parens");
+                 n.addChild(new Node("("));
+                 n.addChild((Node)e);
+                 n.addChild(new Node(")"));
+                 RESULT = (Node)e;
+               :}
+             ;
+
+operator ::= PLUS  {: RESULT = new Node("+"); :}
+           | MINUS {: RESULT = new Node("-"); :}
+           | MULT  {: RESULT = new Node("*"); :}
+           | SLASH  {: RESULT = new Node("/"); :}
+           ;
