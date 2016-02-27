@@ -20,6 +20,7 @@ $(TESTS):
 	./runTests.sh $(VERCUP) $(LANG) $@
 
 lexertest:
+    mkdir -p out
 	javac -d out/ -cp lib/java-cup-$(VERCUP)-runtime.jar src/TestLexer.java src/Lexer.java src/sym.java src/Parser.java
 	java -cp lib/java-cup-$(VERCUP)-runtime.jar:out TestLexer
 
