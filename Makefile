@@ -15,9 +15,12 @@ TESTS = $(TESTCASES)
 .PHONY: test $(TESTCASES) 
 test: $(TESTCASES)
 	echo done
-$(TESTS):	
+$(TESTS):
 	echo $@ >> result.csv
 	./runTests.sh $(VERCUP) $(LANG) $@
+
+lexertest:
+	javac -d out/ -cp lib/java-cup-$(VERCUP)-runtime.jar src/TestLexer.java src/Lexer.java src/sym.java
 
 clean:
 	rm -rf src/Lexer.java src/Lexer.java~ src/sym.java src/Parser.java bin/*.class

@@ -228,7 +228,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     /* literals */
     {DecIntegerLiteral}             { return symbol(sym.NUMBER_LITERAL); }
     \"                              { string.setLength(0); yybegin(STRING); }
-    \'                              { string.setLength(0); yybegin(CHARACTER); }
+    \'                              { string.setLength(0); yybegin(CHAR); }
 
 
     /* Boolean operators */
@@ -256,7 +256,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 }
 
 <CHAR> {
-    \'                      { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, string.toString())}
+    \'                      { yybegin(YYINITIAL); return symbol(sym.CHAR_LITERAL, string.toString()); }
     {SingleCharacter}       { string.append( yytext() ); }
     [^]                     { throw new Error("Illegal character, character has to be surrounded in '' <" + yytext() + ">"); }
 
