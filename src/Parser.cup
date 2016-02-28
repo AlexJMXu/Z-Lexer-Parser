@@ -78,12 +78,14 @@ assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {:
                   RESULT = new Node(d); 
 :};
 
-list ::= L_CURLY_BRACKET:l datatype:d R_CURLY_BRACKET:r {: //Needs to be made recursive
-                  RESULT = new Node(l); 
+list ::= L_CURLY_BRACKET:l list:li datatype:d R_CURLY_BRACKET:r {: 
+                  Node n = (Node)li;
+                  n.addChild((Node)d);
+                  RESULT = n;
 :};
 
-td ::= TYPEDEF:t IDENTIFIER:i list:l {:
-                  RESULT = new Node(t); 
+td ::= TYPEDEF:t IDENTIFIER:i list:l {: //Doesn't work with user defined tdefs yet
+                  RESULT = new Node(t);
 :};
 
 statements ::= statements:ss statement:s {:
@@ -101,7 +103,9 @@ statement ::= full_exp:s {:
               :}
             ;
 
-full_exp ::= assign:a SEMI_COLON {: RESULT = (Node)a; :};
+full_exp ::= assign:a {: RESULT = new Node(a); :}
+           | td:t {: RESULT = new Node(t); :}
+           SEMI_COLON;
 
 operator ::= PLUS  {: RESULT = new Node("+"); :}
            | MINUS {: RESULT = new Node("-"); :}

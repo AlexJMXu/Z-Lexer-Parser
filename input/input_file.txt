@@ -1,3 +1,2 @@
 int fuck = 5;
-
-int galenisaprick = 5;
+tdef person { string name, string surname, int age };
