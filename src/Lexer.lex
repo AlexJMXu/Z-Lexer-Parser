@@ -172,7 +172,6 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "int"                           { return symbol(sym.INTEGER); }
     "bool"                          { return symbol(sym.BOOLEAN); }
     "char"                          { return symbol(sym.CHARACTER); }
-    "string"                        { return symbol(sym.STRING); }
     "rat"                           { return symbol(sym.RATIONAL); }
     "float"                         { return symbol(sym.FLOAT); }
     "dict"                          { return symbol(sym.DICTIONARY); }
