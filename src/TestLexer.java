@@ -12,7 +12,7 @@ class TestLexer {
 
             try {
                 Parser parser = new Parser(lexer);
-                parser.debug(true);
+                //parser.debug(true);
 
                 System.out.println("digraph G {");
                 Symbol result = parser.parse();
