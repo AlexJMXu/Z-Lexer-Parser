@@ -46,11 +46,10 @@ parser code {:
 
 :};
 
-// Do something with ILLEGAL_CHARARCTER or drop it.
 terminal INTEGER, BOOLEAN, CHARACTER, RATIONAL, FLOAT, DICTIONARY, SEQUENCE, VOID, TOP, TRUE, FALSE, IN, ALIAS, TYPEDEF, WHILE, IF, THEN, ELSE, ELSE_IF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN, EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, COMMA, COLON, SEMI_COLON, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN, NUMBER_LITERAL, NEGATION, AND, OR, STRING_LITERAL, CHAR_LITERAL;
 
-nonterminal statements, statement, top_level;
-nonterminal full_exp, operator, assign, datatype, primitivedatatype, aggregatedatatype;
+nonterminal statements, statement, top_level, td;
+nonterminal full_exp, list, operator, assign, datatype, primitivedatatype, aggregatedatatype;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
@@ -76,7 +75,15 @@ aggregatedatatype ::= DICTIONARY:d {: RESULT = new Node("dict"); :}
                     ;
 
 assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {:
-                  RESULT = new Node(d);
+                  RESULT = new Node(d); 
+:};
+
+list ::= L_CURLY_BRACKET:l datatype:d R_CURLY_BRACKET:r {: //Needs to be made recursive
+                  RESULT = new Node(l); 
+:};
+
+td ::= TYPEDEF:t IDENTIFIER:i list:l {:
+                  RESULT = new Node(t); 
 :};
 
 statements ::= statements:ss statement:s {:
