@@ -54,10 +54,12 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BR
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function;
+nonterminal full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, condition, parameter_list;
+nonterminal number, integer_number, float_number, rational_number;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
+precedence left rational_number, float_number, integer_number;
 
 /* main has to be defined */
 program ::= main_function
@@ -100,13 +102,24 @@ function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:d
 parameter_list ::= declist
                  ;
 
-number ::= NUMBER_LITERAL:num {: RESULT = new Node(num); :}
-        |  MINUS NUMBER_LITERAL:num {:
-            Node n = new Node("-");
-            n.addChild(new Node(num));
-            RESULT = n;
-        :}
+number ::= rational_number
+        |  float_number
+        |  integer_number
         ;
+
+integer_number ::= NUMBER_LITERAL:num
+        |  MINUS NUMBER_LITERAL:num
+        ;
+
+float_number ::= NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2
+              |  MINUS NUMBER_LITERAL:nu1 PERIOD NUMBER_LITERAL:num2
+              ;
+
+rational_number ::= NUMBER_LITERAL SLASH NUMBER_LITERAL
+                 |  MINUS NUMBER_LITERAL SLASH NUMBER_LITERAL
+                 |  integer_number UNDERSCORE NUMBER_LITERAL SLASH NUMBER_LITERAL
+                 ;
+
 
 datatype ::= primitivedatatype:p {: RESULT = new Node(p); :}
            | aggregatedatatype:a {: RESULT = new Node(a); :}
@@ -150,6 +163,8 @@ assignment ::= datatype:dt IDENTIFIER:id EQ number:num {:
                   RESULT = n;
               :}
               ;
+
+/* TO-DO find a way to get functions name from fdef */
 
 declist ::= declist2:dl2
           | {: /* empty */ :}     

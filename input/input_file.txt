@@ -1,13 +1,14 @@
 /#
 shots on alex
 #/
-fdef int testFunction (char c) {
-  int muchwow = 2;
-};
-int fuck = 5;
+float fuck = 5.0;
+rat fuckyou = 5/3;
+rat fuckyoutoo = 5_5/3;
 int lol = 4;
 tdef empty {};
 tdef person { int name, int age, int galenisbae };
 seq<int> = [1,2,3];
-
+fdef int testFunction (char c) {
+  int muchwow = 2;
+};
 
