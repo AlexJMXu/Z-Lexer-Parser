@@ -52,7 +52,9 @@ terminal IN, ALIAS, TYPEDEF, WHILE, IF, THEN, ELSE, ELSE_IF, FINISH, DO, PRINT, 
 terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, COMMA, COLON, SEMI_COLON, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN, NUMBER_LITERAL, NEGATION, AND, OR, STRING_LITERAL, CHAR_LITERAL, PERIOD, MAIN;
 
 nonterminal statements, statement, program, td;
-nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, datatype, primitivedatatype, aggregatedatatype, main_function, global_space, function;
+nonterminal main_function, global_space;
+nonterminal datatype, primitivedatatype, aggregatedatatype;
+nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
@@ -71,11 +73,12 @@ global_space ::= global_space full_exp
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
-/* TODO Define function */
-function ::= FUNCTION_DEFINITION:f IDENTIFIER:i L_PAREN:lp R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc SEMI_COLON:sc;
+function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:dl R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc SEMI_COLON:sc
+           ;
 
-/* TODO Define parameter list for function */
-//parameter_list ::=
+/* parameter list for function */
+parameter_list ::= declist
+                 ;
 
 number ::= NUMBER_LITERAL:num {: RESULT = new Node(num); :}
         |  MINUS NUMBER_LITERAL:num {:
@@ -95,6 +98,10 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | CHARACTER:c {: RESULT = new Node("char"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
                     ;
+/* valid return types for functions */
+return_type ::= datatype
+              | VOID {: RESULT = new Node("void"); :}
+              ;
 
 aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET {: 
                         Node n = new Node("dict");
