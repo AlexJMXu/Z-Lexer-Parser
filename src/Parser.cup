@@ -25,10 +25,6 @@ parser code {:
 
     public void addChild(Node n){ children.add(n); }
 
-    public Object getValue() {
-      return this.value;
-    }
-
     public String toString(){
       String ret = "";
       ret += String.format("%d [label=\"%s\"];\n",
@@ -63,14 +59,15 @@ precedence left SLASH, MULT;
 
 /* main has to be defined */
 program ::= main_function
-          | statements:ss main_function
-          | main_function statements:ss
-          | statements:ss main_function statements:ss
+          | global_space main_function
+          | main_function global_space
+          | global_space main_function global_space
           ;
 
-/* anything outside
+/* anything outside the main function can only be an assignment or function */
 global_space ::= global_space assign
                | global_space function
+               | global_space td
                ;
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET
