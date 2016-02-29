@@ -74,17 +74,17 @@ aggregatedatatype ::= DICTIONARY:d {: RESULT = new Node("dict"); :}
                     | SEQUENCE:s {: RESULT = new Node("seq"); :}
                     ;
 
-assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {:
+assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {: //Fix this
                   RESULT = new Node(d); 
 :};
 
-list ::= L_CURLY_BRACKET:l list:li datatype:d R_CURLY_BRACKET:r {: 
+list ::= list:li datatype:d {: 
                   Node n = (Node)li;
                   n.addChild((Node)d);
                   RESULT = n;
 :};
 
-td ::= TYPEDEF:t IDENTIFIER:i list:l {: //Doesn't work with user defined tdefs yet
+td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l list:li R_CURLY_BRACKET:r {: //Doesn't work with user defined tdefs yet
                   RESULT = new Node(t);
 :};
 
@@ -104,6 +104,7 @@ statement ::= full_exp:s {:
             ;
 
 full_exp ::= assign:a {: RESULT = new Node(a); :}
+           SEMI_COLON
            | td:t {: RESULT = new Node(t); :}
            SEMI_COLON;
 
