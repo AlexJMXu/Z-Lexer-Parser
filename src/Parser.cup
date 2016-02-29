@@ -71,6 +71,11 @@ global_space ::= global_space full_exp
                | full_exp
                ;
 
+full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
+           | td:t {: RESULT = new Node(t); :} SEMI_COLON
+           | function:f {: RESULT = new Node(f); :} SEMI_COLON
+           ;               
+
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
 function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:dl R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc SEMI_COLON:sc
@@ -165,11 +170,6 @@ statement ::= full_exp:s {:
                 RESULT = (Node)s;
               :}
             ;
-
-full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
-           | td:t {: RESULT = new Node(t); :} SEMI_COLON
-           | function:f {: RESULT = new Node(f); :} SEMI_COLON
-           ;
 
 operator ::= PLUS  {: RESULT = new Node("+"); :}
            | MINUS {: RESULT = new Node("-"); :}
