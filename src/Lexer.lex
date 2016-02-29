@@ -155,7 +155,7 @@ EndOfLineComment     = "#" {InputCharacter}* {LineTerminator}?
 
 /* Union jletterdigit character class with underscore */
 alphanumericUnderscore = [:jletterdigit:] | "_"
-Identifier = [:jletter:] {alphanumericUnderscore}*
+Identifier = [[:jletter:]--_] {alphanumericUnderscore}* //Remove underscore from jletterdigit set
 
 /*
 A character is a single letter, punctuation symbol, or digit wrapped in ’’ and has type char. The allowed
