@@ -49,7 +49,7 @@ parser code {:
 terminal INTEGER, BOOLEAN, CHARACTER, RATIONAL, FLOAT, DICTIONARY, SEQUENCE, VOID, TOP, TRUE, FALSE, IN, ALIAS, TYPEDEF, WHILE, IF, THEN, ELSE, ELSE_IF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN, EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, COMMA, COLON, SEMI_COLON, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN, NUMBER_LITERAL, NEGATION, AND, OR, STRING_LITERAL, CHAR_LITERAL, PERIOD, MAIN;
 
 nonterminal statements, statement, top_level, td;
-nonterminal full_exp, list, listobj, operator, assign, datatype, primitivedatatype, aggregatedatatype;
+nonterminal full_exp, declist, declistobj, operator, assign, datatype, primitivedatatype, aggregatedatatype;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
@@ -72,23 +72,24 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
 
 aggregatedatatype ::= DICTIONARY:d {: RESULT = new Node("dict"); :}
                     | SEQUENCE:s {: RESULT = new Node("seq"); :}
+                    | TOP:t {: RESULT = new Node("top"); :}
                     ;
 
 assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {: //Fix this so it's not just number_literal
                   RESULT = new Node(d); 
 :};
 
-list ::= list:li listobj:o {: 
-                  Node n = (Node)li;
-                  n.addChild((Node)o);
+declist ::= declist:dl declistobj:dlo {: 
+                  Node n = new Node(dl);
+                  n.addChild(new Node(dlo));
                   RESULT = n;
 :};
 
-listobj ::= datatype:d IDENTIFIER:i COMMA:c {:
+declistobj ::= datatype:d IDENTIFIER:i COMMA:c {:
                   RESULT = (Node)d;
 :};
 
-td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l list:li R_CURLY_BRACKET:r {: //Doesn't work with user defined tdefs yet
+td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: //Doesn't work with user defined tdefs yet
                   RESULT = new Node(t);
 :};
 
