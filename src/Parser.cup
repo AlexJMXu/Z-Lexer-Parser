@@ -59,12 +59,10 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BR
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-<<<<<<< HEAD
+
 nonterminal full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, condition, parameter_list;
-nonterminal number, integer_number, float_number, rational_number;
-=======
 nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, conditional, elseifs;
->>>>>>> origin/master
+nonterminal number, integer_number, float_number, rational_number;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
@@ -123,7 +121,6 @@ number ::= rational_number
         |  integer_number
         ;
 
-<<<<<<< HEAD
 integer_number ::= NUMBER_LITERAL:num
         |  MINUS NUMBER_LITERAL:num
         ;
@@ -137,10 +134,8 @@ rational_number ::= NUMBER_LITERAL SLASH NUMBER_LITERAL
                  |  integer_number UNDERSCORE NUMBER_LITERAL SLASH NUMBER_LITERAL
                  ;
 
-
-=======
 /* TODO Add tdef types to datatype */
->>>>>>> origin/master
+
 datatype ::= primitivedatatype:p {: RESULT = new Node(p); :}
            | aggregatedatatype:a {: RESULT = new Node(a); :}
            ;
