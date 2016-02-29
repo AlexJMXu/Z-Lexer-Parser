@@ -6,6 +6,7 @@ fdef int testFunction (char c) {
 };
 int fuck = 5;
 int lol = 4;
+if ( lol ) then int fuck = 5 fi
 tdef empty {};
 tdef person { int name, int age, int galenisbae };
 seq<int> = [1,2,3];

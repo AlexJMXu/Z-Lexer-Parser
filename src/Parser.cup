@@ -59,7 +59,7 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BR
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function;
+nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, conditional, elseifs;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
@@ -95,6 +95,13 @@ full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | td:t {: RESULT = new Node(t); :} SEMI_COLON
            | function:f {: RESULT = new Node(f); :} SEMI_COLON
            ;   
+
+conditional ::= IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss FINISH 
+              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
+              | IF L_PAREN IDENTIFIER:i3 R_PAREN THEN statements:ss4 elseifs:eif FINISH
+;                
+              
+elseifs ::= ELSE_IF statements:ss elseifs;               
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
