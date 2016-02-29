@@ -3,4 +3,4 @@ damn this comment
 #/
 int fuck = 5;
 int lol = 4;
-tdef person { string name, string surname, int age };
+tdef person { int name, int person, int age };
