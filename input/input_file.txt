@@ -3,5 +3,7 @@ shots on alex
 #/
 int fuck = 5;
 int lol = 4;
-seq<int> = [1,2,3];
 tdef person { int name, int person, int age };
+seq<int> = [1,2,3];
+
+
