@@ -212,6 +212,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "_"                             { return symbol(sym.UNDERSCORE); }
 
     /* identifiers */
+    "main"                          { return symbol(sym.MAIN); }
     {Identifier}                    { return symbol(sym.IDENTIFIER, yytext() ); }
 
     "<"                             { return symbol(sym.L_BRACKET); }
@@ -225,6 +226,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "}"                             { return symbol(sym.R_CURLY_BRACKET); }
     "("                             { return symbol(sym.L_PAREN); }
     ")"                             { return symbol(sym.R_PAREN); }
+    "."                             { return symbol(sym.PERIOD); }
 
     /* literals */
     {DecIntegerLiteral}             { return symbol(sym.NUMBER_LITERAL, yytext() ); }
