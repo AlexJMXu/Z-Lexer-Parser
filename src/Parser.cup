@@ -59,8 +59,8 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BR
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-
 nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal control_flow, forall;
 nonterminal integer_number, float_number, rational_number;
 
 precedence left PLUS, MINUS;
@@ -92,6 +92,7 @@ statements ::= statements:ss statement:s {:
 statement ::= full_exp:s {:
                 RESULT = (Node)s;
               :}
+            | control_flow
             ;
 
 full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
@@ -108,7 +109,7 @@ elseifs ::= ELSE_IF statements:ss elseifs;
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
-function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:dl R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
+function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp parameter_list R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
            ;
 
 /* parameter list for function */
@@ -169,6 +170,7 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
                     :}
                 ;
 
+/* TODO Fix assignment e.g. int n = 5 + 6; */
 assignment ::= datatype:dt IDENTIFIER:id EQ number:num {:
                   Node n = (Node)dt;
                   n.addChild(new Node(id));
@@ -196,6 +198,7 @@ declistobj ::= datatype:d IDENTIFIER:i {:
                :}
              ;
 
+
 td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: 
                   RESULT = new Node(t);
 :};
@@ -205,3 +208,9 @@ operator ::= PLUS  {: RESULT = new Node("+"); :}
            | MULT  {: RESULT = new Node("*"); :}
            | SLASH  {: RESULT = new Node("/"); :}
            ;
+
+/* collection of control flow e.g. if and forall */
+control_flow ::= forall
+               ;
+forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
+         ;

@@ -2,6 +2,12 @@
 shots on alex
 #/
 float fuck = 5.0;
+main {
+  forall(n in a) do
+    int n = 5;
+  od
+}
+/#
 rat fuckyou = 5/3;
 rat fuckyoutoo = 5_5/3;
 int lol = 4;
@@ -12,4 +18,4 @@ seq<int> = [1,2,3];
 fdef int testFunction (char c) {
   int muchwow = 2;
 };
-
+#/
