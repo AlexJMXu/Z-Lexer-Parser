@@ -55,6 +55,8 @@ import java_cup.runtime.*;
             System.out.print("if"); break;
         case sym.THEN:
             System.out.print("then"); break;
+        case sym.MAIN:
+            System.out.print("main"); break;
         case sym.ELSE:
             System.out.print("else"); break;
         case sym.ELSE_IF:
@@ -153,7 +155,7 @@ EndOfLineComment     = "#" {InputCharacter}* {LineTerminator}?
 
 /* Union jletterdigit character class with underscore */
 alphanumericUnderscore = [:jletterdigit:] | "_"
-Identifier = [:jletter:] {alphanumericUnderscore}*
+Identifier = [[:jletter:]--_] {alphanumericUnderscore}* //Remove underscore from jletterdigit set
 
 /*
 A character is a single letter, punctuation symbol, or digit wrapped in ’’ and has type char. The allowed
