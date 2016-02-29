@@ -98,14 +98,7 @@ statement ::= full_exp:s {:
 full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | td:t {: RESULT = new Node(t); :} SEMI_COLON
            | function:f {: RESULT = new Node(f); :} SEMI_COLON
-           ;   
-
-conditional ::= IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss FINISH 
-              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
-              | IF L_PAREN IDENTIFIER:i3 R_PAREN THEN statements:ss4 elseifs:eif FINISH
-;                
-              
-elseifs ::= ELSE_IF statements:ss elseifs;               
+           ;          
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
@@ -211,6 +204,15 @@ operator ::= PLUS  {: RESULT = new Node("+"); :}
 
 /* collection of control flow e.g. if and forall */
 control_flow ::= forall
+               | conditional
                ;
+
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
+
+conditional ::= IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss FINISH //TODO Change identifiers to conditions
+              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
+              | IF L_PAREN IDENTIFIER:i3 R_PAREN THEN statements:ss4 elseifs:eif FINISH
+;                
+              
+elseifs ::= ELSE_IF statements:ss elseifs;                 
