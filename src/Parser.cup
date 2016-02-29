@@ -71,11 +71,6 @@ global_space ::= global_space full_exp
                | full_exp
                ;
 
-full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
-           | td:t {: RESULT = new Node(t); :} SEMI_COLON
-           | function:f {: RESULT = new Node(f); :} SEMI_COLON
-           ;               
-
 statements ::= statements:ss statement:s {:
                   Node n = (Node)ss;
                   n.addChild((Node)s);
@@ -90,6 +85,11 @@ statement ::= full_exp:s {:
                 RESULT = (Node)s;
               :}
             ;
+
+full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
+           | td:t {: RESULT = new Node(t); :} SEMI_COLON
+           | function:f {: RESULT = new Node(f); :} SEMI_COLON
+           ;   
 
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
@@ -167,7 +167,7 @@ declistobj ::= datatype:d IDENTIFIER:i {:
                :}
              ;
 
-td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: //Doesn't work with user defined tdefs yet
+td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: 
                   RESULT = new Node(t);
 :};
 
