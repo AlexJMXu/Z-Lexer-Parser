@@ -76,9 +76,24 @@ full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | function:f {: RESULT = new Node(f); :} SEMI_COLON
            ;               
 
+statements ::= statements:ss statement:s {:
+                  Node n = (Node)ss;
+                  n.addChild((Node)s);
+                  RESULT = n;
+               :}
+             | /* empty */ {:
+                  RESULT = new Node("Statements");
+               :}
+             ;
+
+statement ::= full_exp:s {:
+                RESULT = (Node)s;
+              :}
+            ;
+
 main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
 
-function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:dl R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc SEMI_COLON:sc
+function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp declist:dl R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
            ;
 
 /* parameter list for function */
@@ -103,6 +118,7 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | CHARACTER:c {: RESULT = new Node("char"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
                     ;
+
 /* valid return types for functions */
 return_type ::= datatype
               | VOID {: RESULT = new Node("void"); :}
@@ -151,25 +167,9 @@ declistobj ::= datatype:d IDENTIFIER:i {:
                :}
              ;
 
-
 td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: //Doesn't work with user defined tdefs yet
                   RESULT = new Node(t);
 :};
-
-statements ::= statements:ss statement:s {:
-                  Node n = (Node)ss;
-                  n.addChild((Node)s);
-                  RESULT = n;
-               :}
-             | /* empty */ {:
-                  RESULT = new Node("Statements");
-               :}
-             ;
-
-statement ::= full_exp:s {:
-                RESULT = (Node)s;
-              :}
-            ;
 
 operator ::= PLUS  {: RESULT = new Node("+"); :}
            | MINUS {: RESULT = new Node("-"); :}

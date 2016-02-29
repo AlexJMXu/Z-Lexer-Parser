@@ -3,7 +3,7 @@ shots on alex
 #/
 fdef int testFunction (char c) {
   int muchwow = 2;
-}
+};
 int fuck = 5;
 int lol = 4;
 tdef empty {};
