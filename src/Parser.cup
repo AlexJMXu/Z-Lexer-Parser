@@ -51,12 +51,11 @@ terminal TRUE, FALSE;
 terminal IN, ALIAS, TYPEDEF, WHILE, IF, THEN, ELSE, ELSE_IF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN;
 terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, COMMA, COLON, SEMI_COLON, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN, NUMBER_LITERAL, NEGATION, AND, OR, STRING_LITERAL, CHAR_LITERAL, PERIOD, MAIN;
 
-nonterminal statements, statement, program, td;
-nonterminal full_exp, declist, declistobj, operator, assign, datatype, primitivedatatype, aggregatedatatype;
+nonterminal statements, statement, top_level, td;
+nonterminal number, full_exp, declist, declistobj, operator, assignment, datatype, primitivedatatype, aggregatedatatype;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
-
 
 /* main has to be defined */
 program ::= main_function
@@ -78,6 +77,14 @@ main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET
 /* TODO Define parameter list for function */
 //parameter_list ::=
 
+number ::= NUMBER_LITERAL:num {: RESULT = new Node(num); :}
+        |  MINUS NUMBER_LITERAL:num {:
+            Node n = new Node("-");
+            n.addChild(new Node(num));
+            RESULT = n;
+        :}
+        ;
+
 datatype ::= primitivedatatype:p {: RESULT = new Node(p); :}
            | aggregatedatatype:a {: RESULT = new Node(a); :}
            ;
@@ -89,14 +96,32 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
                     ;
 
-aggregatedatatype ::= DICTIONARY:d {: RESULT = new Node("dict"); :}
-                    | SEQUENCE:s {: RESULT = new Node("seq"); :}
-                    | TOP:t {: RESULT = new Node("top"); :}
-                    ;
+aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET {: 
+                        Node n = new Node("dict");
+                        n.addChild(new Node("<"));
+                        n.addChild((Node)(p));
+                        n.addChild(new Node(","));
+                        n.addChild((Node)(p2));
+                        n.addChild(new Node(">"));
+                        RESULT = n; 
+                    :}
+                    | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET {:
+                        Node n = new Node("seq");
+                        n.addChild(new Node("<"));
+                        n.addChild((Node)(p));
+                        n.addChild(new Node(">"));
+                        RESULT = n;
+                    :}
+                ;
 
-assign ::= datatype:d IDENTIFIER:id EQ:e NUMBER_LITERAL:n {: //Fix this so it's not just number_literal
-                  RESULT = new Node(d); 
-:};
+assignment ::= datatype:dt IDENTIFIER:id EQ number:num {:
+                  Node n = (Node)dt;
+                  n.addChild(new Node(id));
+                  n.addChild(new Node("="));
+                  n.addChild((Node)num);
+                  RESULT = n;
+              :}
+              ;
 
 declist ::= declist:dl declistobj:dlo {: 
                   Node n = new Node(dl);
@@ -127,7 +152,7 @@ statement ::= full_exp:s {:
               :}
             ;
 
-full_exp ::= assign:a {: RESULT = new Node(a); :}
+full_exp ::= assignment:a {: RESULT = new Node(a); :}
            SEMI_COLON
            | td:t {: RESULT = new Node(t); :}
            SEMI_COLON;
