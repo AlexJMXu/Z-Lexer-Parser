@@ -55,6 +55,8 @@ import java_cup.runtime.*;
             System.out.print("if"); break;
         case sym.THEN:
             System.out.print("then"); break;
+        case sym.MAIN:
+            System.out.print("main"); break;
         case sym.ELSE:
             System.out.print("else"); break;
         case sym.ELSE_IF:
