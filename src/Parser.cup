@@ -60,9 +60,8 @@ nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 
-nonterminal full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, condition, parameter_list;
-nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, conditional, elseifs;
-nonterminal number, integer_number, float_number, rational_number;
+nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal integer_number, float_number, rational_number;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
