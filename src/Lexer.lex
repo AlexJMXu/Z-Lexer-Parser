@@ -106,7 +106,7 @@ import java_cup.runtime.*;
         case sym.COLON:
             System.out.print(":"); break;
         case sym.SEMI_COLON:
-            System.out.print(";"); break;
+            System.out.print(";>\n"); return;
         case sym.L_CURLY_BRACKET:
             System.out.print("{"); break;
         case sym.R_CURLY_BRACKET:
@@ -238,10 +238,10 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "||"                            { return symbol(sym.OR); }
 
     /* comments */
-    {Comment}                       { System.out.println("Found a comment"); }
+    {Comment}                       { System.out.println("Ignoring comment"); }
 
     /* whitespace */
-    {WhiteSpace}                    { System.out.println("whitespace");  }
+    {WhiteSpace}                    { /* ignore whitespace */  }
 }
 
 <STRING> {
