@@ -25,6 +25,10 @@ parser code {:
 
     public void addChild(Node n){ children.add(n); }
 
+    public Object getValue() {
+      return this.value;
+    }
+
     public String toString(){
       String ret = "";
       ret += String.format("%d [label=\"%s\"];\n",
