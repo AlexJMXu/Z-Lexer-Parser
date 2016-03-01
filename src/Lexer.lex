@@ -111,6 +111,8 @@ import java_cup.runtime.*;
             System.out.print(","); break;
         case sym.COLON:
             System.out.print(":"); break;
+        case sym.CONCATENATION:
+            System.out.print("::"); break;
         case sym.SEMI_COLON:
             System.out.print(";>\n"); return;
         case sym.PERIOD:
@@ -230,6 +232,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "]"                             { return symbol(sym.R_SQUARE_BRACKET); }
     ","                             { return symbol(sym.COMMA); }
     ":"                             { return symbol(sym.COLON); }
+    "::"                            { return symbol(sym.CONCATENATION); }
     ";"                             { return symbol(sym.SEMI_COLON); }
     "{"                             { return symbol(sym.L_CURLY_BRACKET); }
     "}"                             { return symbol(sym.R_CURLY_BRACKET); }
