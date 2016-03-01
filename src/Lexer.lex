@@ -17,6 +17,8 @@ import java_cup.runtime.*;
   StringBuffer string = new StringBuffer();
 
   private void print_lexeme(int type, Object value){
+      if(!debug()){ return; }
+
       System.out.print("<");
       switch(type) {
         case sym.INTEGER:
