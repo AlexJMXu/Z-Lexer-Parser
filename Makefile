@@ -12,9 +12,13 @@ bin/$(LANG).class: src/Lexer.lex src/Parser.cup src/$(LANG).java
 	javac -cp lib/java-cup-$(VERCUP)-runtime.jar -sourcepath src/ -d bin/ src/$(LANG).java
 
 TESTS = $(TESTCASES)
-.PHONY: test $(TESTCASES) 
-test: $(TESTCASES)
+.PHONY: test $(TESTCASES)
+
+test:
+	rm -f result.csv
+	$(TESTCASES)
 	echo done
+
 $(TESTS):
 	echo $@ >> result.csv
 	./runTests.sh $(VERCUP) $(LANG) $@
