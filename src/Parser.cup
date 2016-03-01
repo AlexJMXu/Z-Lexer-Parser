@@ -63,7 +63,7 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2, dictlistobj, seqdictdatatype, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal control_flow, forall;
 nonterminal conditions, condition;
 nonterminal alias;
@@ -160,14 +160,7 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | CHARACTER:c {: RESULT = new Node("char"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
                     | TOP:t {: RESULT = new Node("top"); :} 
-                    | IDENTIFIER:id {: RESULT = new Node("identifier"); :} //For user-defined types
                     ;
-
-seqdictdatatype ::= SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET IDENTIFIER:id EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-              | DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-              | IDENTIFIER IDENTIFIER:id EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-              | IDENTIFIER IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-              ;
 
 /* valid return types for functions */
 return_type ::= datatype
@@ -178,9 +171,17 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
                     | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
                     ;                 
 
-assignment ::= primitivedatatype IDENTIFIER:id EQ exp
-            |  seqdictdatatype
-            ;
+assignment ::= IDENTIFIER IDENTIFIER:id EQ exp
+            | primitivedatatype IDENTIFIER:id EQ exp
+            | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+            | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+            | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ STRING_LITERAL
+            | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ STRING_LITERAL
+            | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+            | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+            | DICTIONARY L_BRACKET primitivedatatype COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+            | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+            ;                    
 
 conditions ::= condition
             | condition OR conditions
@@ -271,4 +272,5 @@ elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
 ;
 
 alias ::= ALIAS datatype IDENTIFIER
+        | ALIAS IDENTIFIER IDENTIFIER
         ;
