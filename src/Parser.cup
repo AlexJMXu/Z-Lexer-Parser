@@ -1,10 +1,6 @@
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
-/*
-TODO read, concatenation
-*/
-
 scan with {: return lexer.next_token(); :};
 
 parser code {:
@@ -65,11 +61,11 @@ nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
 nonterminal control_flow, forall, while;
-nonterminal conditions, condition;
+nonterminal conditions, condition, alllist, inlist;
 nonterminal definelen, alias, array_index, print, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
-precedence left CARET, SLASH, MULT, PLUS, MINUS;
+precedence left IN, CARET, SLASH, MULT, PLUS, MINUS;
 
 /* main has to be defined */
 program ::= main_function
@@ -132,7 +128,16 @@ exp ::= number
       | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       | RETURN exp
-      ;
+      | exp IN inlist
+      ;     
+
+alllist ::= seqlistwithoutid
+          | dictlistwithoutid
+          ;
+
+inlist ::= alllist
+        | IDENTIFIER
+        ;
 
 array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
@@ -280,7 +285,7 @@ control_flow ::= forall
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
 
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH //TODO Change identifiers to conditions
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH 
               | IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif
 ;            
               

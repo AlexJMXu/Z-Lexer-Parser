@@ -5,6 +5,7 @@ main {
 int fuck = 5.0;
 float fuck = 5.0;
 print a;
+bool a= 2 in [2,3];
 print 2 + 3;
 alias foo bar;
   forall(n in a) do
