@@ -250,6 +250,7 @@ declist2 ::= declistobj:dlo COMMA:c declist2:dl {:
 declistobj ::= datatype:d IDENTIFIER:i {:
                   RESULT = (Node)d; 
                :}
+             | IDENTIFIER IDENTIFIER  
              ;
 
 seqlist ::= seqlist2:sl2
