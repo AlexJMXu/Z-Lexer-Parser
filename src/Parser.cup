@@ -58,7 +58,7 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses;
 nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
 nonterminal control_flow, forall, while;
 nonterminal conditions, condition , alllist, inlist;
@@ -286,13 +286,16 @@ control_flow ::= forall
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
 
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH 
-              | IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH
 ;            
               
 elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
-          | ELSE statements:ss2 FINISH
-;
+          | /* empty */ 
+          ;
+
+elses ::= ELSE statements
+        | /* empty */
+        ;        
 
 while ::= WHILE L_PAREN conditions R_PAREN DO statements OD;
 
