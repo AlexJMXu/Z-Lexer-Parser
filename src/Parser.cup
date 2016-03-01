@@ -1,10 +1,6 @@
 import java_cup.runtime.*;
 import java.util.ArrayList;
 
-/*
-TODO read, concatenation
-*/
-
 scan with {: return lexer.next_token(); :};
 
 parser code {:
@@ -62,17 +58,17 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
-nonterminal conditions, condition;
+nonterminal conditions, condition , alllist, inlist;
 nonterminal definelen, alias, array_index, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
-precedence left COLON, CARET, SLASH, MULT, PLUS, MINUS;
+precedence left IN, COLON, AND, OR, CARET, SLASH, MULT, PLUS, MINUS;
 
 /* main has to be defined */
 program ::= main_function
@@ -137,12 +133,20 @@ exp ::= number
       | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       | RETURN exp
-      ;
+      | exp IN inlist
+      ;     
+
+alllist ::= seqlistwithoutid
+          | dictlistwithoutid
+          ;
+
+inlist ::= alllist
+        | IDENTIFIER
+        ;
 
 array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
 definelen ::= LEN L_PAREN exp R_PAREN;          
-
 
 unary_operator ::= NEGATION {: RESULT = new Node("!"); :}; 
 
@@ -152,21 +156,21 @@ binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
                  | SLASH  {: RESULT = new Node("/"); :}
                  | CARET  {: RESULT = new Node("^"); :}
                  | COLON COLON {: RESULT = new Node("::"); :} //Concatenation
+                 | AND {: RESULT = new Node("&&"); :}
+                 | OR {: RESULT = new Node("||"); :}
                  ;
 
 integer_number ::= NUMBER_LITERAL:num
-        |  MINUS NUMBER_LITERAL:num
-        ;
-
-float_number ::= NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2
-              |  MINUS NUMBER_LITERAL:nu1 PERIOD NUMBER_LITERAL:num2
-              ;
-
-rational_number ::= integer_number SLASH integer_number
-                 |  integer_number UNDERSCORE integer_number SLASH integer_number
+                 |  MINUS NUMBER_LITERAL:num
                  ;
 
-/* TODO Add tdef types to datatype */
+float_number ::= NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2
+               | MINUS NUMBER_LITERAL:nu1 PERIOD NUMBER_LITERAL:num2
+               ;
+
+rational_number ::= integer_number SLASH integer_number
+                  | integer_number UNDERSCORE integer_number SLASH integer_number
+                  ;
 
 datatype ::= primitivedatatype:p {: RESULT = new Node(p); :}
            | aggregatedatatype:a {: RESULT = new Node(a); :}
@@ -298,14 +302,18 @@ control_flow ::= forall
 
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
-
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH //TODO Change identifiers to conditions
-              | IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif
+         
+/* IF statement, 0 or more else ifs, 0 or 1 else, FI */
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH 
 ;            
               
 elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
-          | ELSE statements:ss2 FINISH
-;
+          | /* empty */ 
+          ;
+
+elses ::= ELSE statements
+        | /* empty */
+        ;        
 
 while ::= WHILE L_PAREN conditions R_PAREN DO statements OD;
 
@@ -316,4 +324,3 @@ alias ::= ALIAS datatype IDENTIFIER
 read ::= READ IDENTIFIER;
 
 print ::= PRINT exp;
-
