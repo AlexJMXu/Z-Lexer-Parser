@@ -63,13 +63,16 @@ nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
-nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
+nonterminal declist, declist2, declistobj;
+nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
+nonterminal dictlist, dictlistwithoutid, dictlist2;
+nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
 nonterminal conditions, condition;
 nonterminal definelen, alias, array_index, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
-precedence left CARET, SLASH, MULT, PLUS, MINUS;
+precedence left COLON, CARET, SLASH, MULT, PLUS, MINUS;
 
 /* main has to be defined */
 program ::= main_function
@@ -123,6 +126,7 @@ number ::= rational_number
 
 exp ::= number
       | CHAR_LITERAL
+      | STRING_LITERAL
       | IDENTIFIER
       | array_index
       | exp binary_operator exp
@@ -147,7 +151,8 @@ binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
                  | MULT  {: RESULT = new Node("*"); :}
                  | SLASH  {: RESULT = new Node("/"); :}
                  | CARET  {: RESULT = new Node("^"); :}
-           ;      
+                 | COLON COLON {: RESULT = new Node("::"); :} //Concatenation
+                 ;
 
 integer_number ::= NUMBER_LITERAL:num
         |  MINUS NUMBER_LITERAL:num
@@ -184,17 +189,30 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
                     | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
                     ;                 
 
-assignment ::= IDENTIFIER IDENTIFIER:id EQ exp
-            | primitivedatatype IDENTIFIER:id EQ exp
-            | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-            | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-            | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ STRING_LITERAL
-            | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ STRING_LITERAL
-            | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-            | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-            | DICTIONARY L_BRACKET primitivedatatype COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-            | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-            ;                    
+assignment ::= primitivedatatype IDENTIFIER:id EQ exp
+             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+             | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ STRING_LITERAL
+             | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ STRING_LITERAL
+             | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET primitivedatatype COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | IDENTIFIER IDENTIFIER EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
+             ;
+
+
+/* Constructor list for custom typedefs */
+
+constructor_list ::= constructor_list_2
+                   | {: /* empty */ :}
+                   ;
+
+constructor_list_2 ::= constructor_list_obj COMMA constructor_list_2
+                   | constructor_list_obj
+                   ;
+
+constructor_list_obj ::= exp:e;
 
 conditions ::= condition
             | condition OR conditions
