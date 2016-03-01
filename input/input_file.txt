@@ -6,7 +6,25 @@ main {
   forall(n in a) do
     int n = 5;
   od
-  if ( lol ) then int fuck = 5; fi
+  if ( lol ) then
+  	int fuck = 5; 
+  fi
+
+  if ( lol ) then
+  	int fuck = 3; 
+  else 
+  	int fuck = 1; 
+  fi
+
+  if ( lol ) then
+  	int fuck = 2; 
+  elif ( lol ) then
+   	int fuck = 3; 
+  elif ( lol ) then
+  	int fuck = 4; 
+  else 
+  	int fuck = 0; 
+  fi
 }
 rat fuckyou = 5/3;
 rat fuckyoutoo = 5_5/3;
