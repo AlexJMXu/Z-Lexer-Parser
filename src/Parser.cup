@@ -64,9 +64,9 @@ nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
-nonterminal definelen, control_flow, forall;
+nonterminal control_flow, forall, while;
 nonterminal conditions, condition;
-nonterminal alias, array_index, print, truefalse;
+nonterminal definelen, alias, array_index, print, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
 precedence left CARET, SLASH, MULT, PLUS, MINUS;
@@ -273,6 +273,7 @@ td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {:
 /* collection of control flow e.g. if and forall */
 control_flow ::= forall
                | conditional
+               | while
                ;
 
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
@@ -285,6 +286,8 @@ conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH //TODO C
 elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
           | ELSE statements:ss2 FINISH
 ;
+
+while ::= WHILE L_PAREN conditions R_PAREN DO statements OD;
 
 alias ::= ALIAS datatype IDENTIFIER
         | ALIAS IDENTIFIER IDENTIFIER
