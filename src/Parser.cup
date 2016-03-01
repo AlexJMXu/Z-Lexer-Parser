@@ -144,7 +144,6 @@ array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
 definelen ::= LEN L_PAREN exp R_PAREN;          
 
-
 unary_operator ::= NEGATION {: RESULT = new Node("!"); :}; 
 
 binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
@@ -287,8 +286,9 @@ control_flow ::= forall
 
 forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
-
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH
+         
+/* IF statement, 0 or more else ifs, 0 or 1 else, FI */
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH 
 ;            
               
 elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
