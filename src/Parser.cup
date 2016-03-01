@@ -64,7 +64,7 @@ nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
-nonterminal control_flow, forall, while>>>>>>> origin/master
+nonterminal control_flow, forall, while;
 nonterminal conditions, condition;
 nonterminal definelen;
 nonterminal alias, array_index, print;
