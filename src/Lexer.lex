@@ -109,6 +109,8 @@ import java_cup.runtime.*;
             System.out.print(":"); break;
         case sym.SEMI_COLON:
             System.out.print(";>\n"); return;
+        case sym.PERIOD:
+            System.out.print("."); break;
         case sym.L_CURLY_BRACKET:
             System.out.print("{"); break;
         case sym.R_CURLY_BRACKET:
