@@ -2,7 +2,7 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 
 /*
-TODO WHILE, FIX CARET, read, concatenation
+TODO WHILE, read, concatenation
 */
 
 scan with {: return lexer.next_token(); :};
@@ -69,8 +69,7 @@ nonterminal conditions, condition;
 nonterminal alias, array_index, print, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
-precedence left PLUS, MINUS;
-precedence left SLASH, MULT;
+precedence left CARET, SLASH, MULT, PLUS, MINUS;
 
 /* main has to be defined */
 program ::= main_function
@@ -130,6 +129,7 @@ exp ::= number
       | unary_operator exp
       | truefalse
       | definelen
+      | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       ;
 
@@ -141,9 +141,10 @@ definelen ::= LEN L_PAREN exp R_PAREN;
 unary_operator ::= NEGATION {: RESULT = new Node("!"); :}; 
 
 binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
-           | MINUS {: RESULT = new Node("-"); :}
-           | MULT  {: RESULT = new Node("*"); :}
-           | SLASH  {: RESULT = new Node("/"); :}
+                 | MINUS {: RESULT = new Node("-"); :}
+                 | MULT  {: RESULT = new Node("*"); :}
+                 | SLASH  {: RESULT = new Node("/"); :}
+                 | CARET  {: RESULT = new Node("^"); :}
            ;      
 
 integer_number ::= NUMBER_LITERAL:num
