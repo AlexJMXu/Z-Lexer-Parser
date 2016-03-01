@@ -1,27 +1,38 @@
 /#
 shots on alex
 #/
-float fuck = 5.0;
 main {
+float fuck = 5.0;
+alias foo bar;
   forall(n in a) do
     int n = 5;
   od
-  	seq<int> test = [1,2,3];
-	rat fuckyou = 5/3;
-	rat fuckyoutoo = 5_5/3;
-	int lol = 4;
-	int fuckfuckfuck = 5 + 5;
-	if ( lol ) then int fuck = 5 fi
+  if ( lol ) then
+  	int fuck = 5; 
+  fi
+
+  if ( lol ) then
+  	int fuck = 3; 
+  else 
+  	int fuck = 1; 
+  fi
+
+  if ( lol ) then
+  	int fuck = 2; 
+  elif ( lol ) then
+   	int fuck = 3; 
+  elif ( lol ) then
+  	int fuck = 4; 
+  else 
+  	int fuck = 0; 
+  fi
 }
-/#
 rat fuckyou = 5/3;
 rat fuckyoutoo = 5_5/3;
 int lol = 4;
-if ( lol ) then int fuck = 5 fi
 tdef empty {};
 tdef person { int name, int age, int galenisbae };
 seq<int> = [1,2,3];
 fdef int testFunction (char c) {
   int muchwow = 2;
 };
-#/
