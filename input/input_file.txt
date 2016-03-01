@@ -4,6 +4,9 @@ shots on alex
 seq<int> foo = [1:2];
 main {
 int fuck = 5.0;
+float fuck = 5.0;
+print a;
+print 2 + 3;
 alias foo bar;
   forall(n in a) do
     int n = 5;
