@@ -7,7 +7,7 @@ alias foo bar;
   forall(n in a) do
     int n = 5;
   od
-  if ( lol ) then
+  if ( (3+5)<(5+6) ) then
   	int fuck = 5; 
   fi
 
@@ -32,7 +32,10 @@ rat fuckyoutoo = 5_5/3;
 int lol = 4;
 tdef empty {};
 tdef person { int name, int age, int galenisbae };
-seq<int> = [1,2,3];
+seq<int> test = [1,2,3];
+seq<int> plswork = [1,2,[3,5,2]];
+dict<int,int> plswork2 = {2:3,'d':3};
+dict<int, int> plswork3 = {2:3, {5:2}};
 fdef int testFunction (char c) {
   int muchwow = 2;
 };
