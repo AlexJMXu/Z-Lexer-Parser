@@ -169,10 +169,18 @@ binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
                  | MULT  {: RESULT = new Node("*"); :}
                  | SLASH  {: RESULT = new Node("/"); :}
                  | CARET  {: RESULT = new Node("^"); :}
-                 | CONCATENATION {: RESULT = new Node("::"); :}
-                 | AND {: RESULT = new Node("&&"); :}
-                 | OR {: RESULT = new Node("||"); :}
+                 | CONCATENATION {: RESULT = new Node("::"); :} 
                  ;
+
+conditional_operator ::=  L_BRACKET
+                      | R_BRACKET
+                      | EQEQ
+                      | L_BRACKET EQ
+                      | R_BRACKET EQ
+                      | unary_operator EQ
+                      | AND
+                      | OR
+                      ;
 
 integer_number ::= NUMBER_LITERAL:num
                  |  MINUS NUMBER_LITERAL:num
@@ -213,6 +221,9 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
 
 assignment ::= primitivedatatype identifier_children:id EQ exp
              | identifier_children EQ exp
+             | identifier_children EQ condition
+             | identifier_children identifier_children EQ condition
+             | primitivedatatype identifier_children EQ condition
              | identifier_children identifier_children
              | primitivedatatype identifier_children 
              | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ STRING_LITERAL 
@@ -253,15 +264,13 @@ concat_list_obj ::= function_call
 conditions ::= condition
             | condition OR conditions
             | condition AND conditions
+            | identifier_children
+            | unary_operator identifier_children
+            | primitivedatatype
+            | unary_operator primitivedatatype
             ;
 
-condition ::= exp L_BRACKET exp
-            | exp R_BRACKET exp
-            | exp EQEQ exp
-            | exp L_BRACKET EQ exp
-            | exp R_BRACKET EQ exp
-            | exp unary_operator EQ exp
-            | exp
+condition ::= exp conditional_operator exp
             ;
 
 truefalse ::= TRUE
