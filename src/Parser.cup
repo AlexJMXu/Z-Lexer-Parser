@@ -211,9 +211,9 @@ forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
          ;
 
 conditional ::= IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss FINISH //TODO Change identifiers to conditions
-              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
-              | IF L_PAREN IDENTIFIER:i3 R_PAREN THEN statements:ss4 elseifs:eif ELSE statements:ss5 FINISH
+              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 elseifs:eif
 ;                
               
-elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e //TODO Get out of recursive elifs
+elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
+          | ELSE statements:ss2 FINISH
 ;
