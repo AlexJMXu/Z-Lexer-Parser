@@ -1,24 +1,16 @@
-string s1= "Alice in Wonderland";
-string s2= "Gilgamesh";
-string s3= "One Thousand and One Nights";
-
 main {
-  string key= "ic";  
-  seq<string> books= [s1,s2,s3];
+  string foo = "zork";
+  string bar = "bork";
+  int baz    = 27;
 
-  bool found = F;
-  int i= 0;
-  string tmp;
+  if (foo == "qux") then
+    print("Not this branch...");
 
-  while (i<len(books)) do 
-     tmp = books[i];
-     if (key in tmp) then found = T; fi
-     i = i + 1;
-  od
+  elif (bar == "toto") then
+    print("Nor this one...");
 
-  return;
+  elif (baz < 42) then
+    print("This is the one");
+
+  fi
 };
-
-fdef int alice () {
-  return 5;
-} ;

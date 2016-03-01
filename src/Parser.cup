@@ -318,7 +318,7 @@ forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
 conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH 
 ;            
               
-elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
+elseifs ::= ELSE_IF L_PAREN conditions R_PAREN THEN statements:ss elseifs:e
           | /* empty */ 
           ;
 
