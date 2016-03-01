@@ -275,6 +275,7 @@ conditions ::= condition
             | unary_operator identifier_children
             | primitivedatatype
             | unary_operator primitivedatatype
+            | truefalse
             ;
 
 condition ::= exp conditional_operator exp
