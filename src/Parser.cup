@@ -62,7 +62,8 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
 nonterminal definelen, control_flow, forall;
 nonterminal conditions, condition;
 nonterminal alias, array_index, print;
@@ -128,6 +129,7 @@ exp ::= number
       | L_PAREN exp R_PAREN
       | unary_operator exp
       | definelen
+      | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       ;
 
 array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
