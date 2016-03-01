@@ -66,7 +66,7 @@ nonterminal number, full_exp, dictlistobj, assignment, return_type, function, pa
 nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
 nonterminal control_flow, forall, while;
 nonterminal conditions, condition;
-nonterminal definelen, alias, array_index, print, truefalse;
+nonterminal definelen, alias, array_index, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
 precedence left CARET, SLASH, MULT, PLUS, MINUS;
@@ -98,6 +98,7 @@ statement ::= full_exp:s {:
               :}
             | control_flow
             | print SEMI_COLON
+            | read SEMI_COLON
             ;
 
 full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
@@ -294,6 +295,7 @@ alias ::= ALIAS datatype IDENTIFIER
         | ALIAS IDENTIFIER IDENTIFIER
         ;
 
+read ::= READ IDENTIFIER;
 
 print ::= PRINT exp;
 
