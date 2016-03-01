@@ -61,7 +61,7 @@ nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
-nonterminal identifier_children, identifier_list, identifier_list_2;
+nonterminal identifier_children, identifier_list;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
@@ -135,12 +135,11 @@ exp ::= number
       | truefalse
       | definelen
       | identifier_children L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
-      | identifier_children L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       | function_call
       | exp IN inlist
       ;     
 
-function_call ::= IDENTIFIER L_PAREN constructor_list R_PAREN; //Allow functions inside expressions  e.g. foo(int a, char c);
+function_call ::= identifier_children L_PAREN constructor_list R_PAREN; //Allow functions inside expressions  e.g. foo(a, "12", 14);
 
 
 alllist ::= seqlistwithoutid
@@ -154,7 +153,7 @@ inlist ::= alllist
 /* allow f.children.child2 */
 identifier_children ::= IDENTIFIER identifier_list;
 
-identifier_list::= PERIOD IDENTIFIER identifier_list_2
+identifier_list::= PERIOD IDENTIFIER identifier_list
                     | {: /* empty */ :}
                     ;
 
@@ -268,7 +267,7 @@ declist2 ::= declistobj:dlo COMMA:c declist2:dl {:
                   n.addChild(new Node(dlo));
                   RESULT = n; :}
           | declistobj:dlo {: RESULT = new Node(dlo); :}        
-          ;        
+          ;
 
 declistobj ::= datatype:d identifier_children:i {:
                   RESULT = (Node)d; 
