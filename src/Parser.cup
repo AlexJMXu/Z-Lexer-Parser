@@ -191,6 +191,10 @@ return_type ::= datatype
 
 aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET
                     | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
+                    | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET
+                    | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype:p2 R_BRACKET
+                    | DICTIONARY L_BRACKET primitivedatatype:p COMMA IDENTIFIER R_BRACKET
+                    | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET
                     ;                 
 
 assignment ::= primitivedatatype IDENTIFIER:id EQ exp
