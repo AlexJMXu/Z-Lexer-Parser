@@ -2,8 +2,7 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 
 /*
-TODO Do we have to check for undefined variables?
-TODO Do we have to check if types are compatible?
+TODO WHILE, FIX CARET, read, concatenation
 */
 
 scan with {: return lexer.next_token(); :};
@@ -54,7 +53,7 @@ parser code {:
 terminal INTEGER, BOOLEAN, CHARACTER, RATIONAL, FLOAT, DICTIONARY, SEQUENCE, VOID, TOP;
 terminal TRUE, FALSE;
 terminal WHILE, IF, THEN, ELSE, ELSE_IF;
-terminal IN, ALIAS, TYPEDEF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN;
+terminal LEN, IN, ALIAS, TYPEDEF, FINISH, DO, PRINT, READ, FORALL, FUNCTION_DEFINITION, OD, RETURN;
 terminal STRING_LITERAL, CHAR_LITERAL;
 terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, COMMA, COLON, SEMI_COLON, NUMBER_LITERAL, PERIOD, MAIN;
 terminal NEGATION, AND, OR;
@@ -64,9 +63,9 @@ nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
-nonterminal control_flow, forall;
+nonterminal definelen, control_flow, forall;
 nonterminal conditions, condition;
-nonterminal alias, print;
+nonterminal alias, array_index, print;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
 precedence left PLUS, MINUS;
@@ -124,10 +123,17 @@ number ::= rational_number
 exp ::= number
       | CHAR_LITERAL
       | IDENTIFIER
+      | array_index
       | exp binary_operator exp
       | L_PAREN exp R_PAREN
-      | unary_operator exp 
+      | unary_operator exp
+      | definelen
       ;
+
+array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
+
+definelen ::= LEN L_PAREN exp R_PAREN;          
+
 
 unary_operator ::= NEGATION {: RESULT = new Node("!"); :}; 
 
