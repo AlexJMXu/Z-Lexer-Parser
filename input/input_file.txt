@@ -36,3 +36,4 @@ seq<int> = [1,2,3];
 fdef int testFunction (char c) {
   int muchwow = 2;
 };
+

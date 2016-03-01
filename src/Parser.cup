@@ -63,7 +63,7 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, declist, declist2, declistobj, seqlist, seqlist2, seqlistobj, dictlist, dictlist2, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal control_flow, forall;
 nonterminal conditions, condition;
 nonterminal alias;
@@ -120,6 +120,14 @@ number ::= rational_number
         |  integer_number
         ;
 
+exp ::= number
+      | CHAR_LITERAL
+      | IDENTIFIER
+      | exp binary_operator exp
+      | exp L_PAREN binary_operator exp R_PAREN
+      | unary_operator L_PAREN exp R_PAREN
+      ;
+
 unary_operator ::= NEGATION {: RESULT = new Node("!"); :}; 
 
 binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
@@ -166,7 +174,7 @@ return_type ::= datatype
 
 aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET
                     | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
-                ;
+                    ;
 
 /* TODO Fix assignment e.g. int n = 5 + 6; */
 /* datatype to identifier */
@@ -218,6 +226,36 @@ declistobj ::= datatype:d IDENTIFIER:i {:
                :}
              ;
 
+seqlist ::= seqlist2:sl2
+          | {: /* empty */ :}
+          ;
+
+seqlist2 ::= seqlistobj:slo COMMA:c seqlist2:sl {:
+                  Node n = new Node(sl);
+                  n.addChild(new Node(slo));
+                  RESULT = n; :}
+           | seqlistobj:slo {: RESULT = new Node(slo); :}
+           ;      
+
+seqlistobj ::= datatype:d; /* TODO fix this to expression */
+
+dictlist ::= dictlist2:dl2
+           | {: /* empty */ :}
+           ;
+
+dictlist2 ::= dictlistobj:dlo COMMA:c dictlist2:dl {:
+                  Node n = new Node(dl);
+                  n.addChild(new Node(dlo));
+                  RESULT = n; :}
+            | dictlistobj:dlo {: RESULT = new Node(dlo); :}
+            ; 
+
+dictlistobj ::= exp:e1 COLON:c exp:e2 {:
+                  Node n = new Node(c);
+                  n.addChild(new Node(e1));
+                  n.addChild(new Node(e2)); 
+                  RESULT = n; :}
+;
 
 td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: 
                   RESULT = new Node(t);
