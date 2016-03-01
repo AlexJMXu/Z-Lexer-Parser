@@ -65,7 +65,7 @@ nonterminal conditions, condition , alllist, inlist;
 nonterminal definelen, alias, array_index, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 
-precedence left IN, CARET, SLASH, MULT, PLUS, MINUS;
+precedence left IN, AND, OR, CARET, SLASH, MULT, PLUS, MINUS;
 
 /* main has to be defined */
 program ::= main_function
@@ -152,6 +152,8 @@ binary_operator ::= PLUS  {: RESULT = new Node("+"); :}
                  | MULT  {: RESULT = new Node("*"); :}
                  | SLASH  {: RESULT = new Node("/"); :}
                  | CARET  {: RESULT = new Node("^"); :}
+                 | AND {: RESULT = new Node("&&"); :}
+                 | OR {: RESULT = new Node("||"); :}
            ;      
 
 integer_number ::= NUMBER_LITERAL:num
