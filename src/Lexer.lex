@@ -57,6 +57,8 @@ import java_cup.runtime.*;
             System.out.print("then"); break;
         case sym.MAIN:
             System.out.print("main"); break;
+        case sym.LEN:
+            System.out.print("len"); break;
         case sym.ELSE:
             System.out.print("else"); break;
         case sym.ELSE_IF:
@@ -217,6 +219,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
     /* identifiers */
     "main"                          { return symbol(sym.MAIN); }
+    "len"                          { return symbol(sym.LEN); }
     {Identifier}                    { return symbol(sym.IDENTIFIER, yytext() ); }
 
     "<"                             { return symbol(sym.L_BRACKET); }
