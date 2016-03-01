@@ -159,6 +159,7 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | RATIONAL:r {: RESULT = new Node("rat"); :}
                     | CHARACTER:c {: RESULT = new Node("char"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
+                    | TOP:t {: RESULT = new Node("top"); :}
                     ;
 
 /* valid return types for functions */

@@ -34,7 +34,7 @@ tdef empty {};
 tdef person { int name, int age, int galenisbae };
 seq<int> test = [1,2,3];
 seq<int> plswork = [1,2,[3,5,2]];
-dict<int,int> plswork2 = {2:3,'d':3};
+dict<top,int> plswork2 = {2:3,'d':3};
 dict<int, int> plswork3 = {2:3, {5:2}};
 fdef int testFunction (char c) {
   int muchwow = 2;
