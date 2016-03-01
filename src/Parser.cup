@@ -127,7 +127,7 @@ number ::= rational_number
 exp ::= number
       | CHAR_LITERAL
       | STRING_LITERAL
-      | IDENTIFIER
+      | identifier_children
       | array_index
       | exp binary_operator exp
       | L_PAREN exp R_PAREN
