@@ -229,6 +229,7 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
 assignment ::= primitivedatatype identifier_children:id EQ exp
              | identifier_children EQ exp
              | identifier_children EQ condition
+             | identifier_children EQ identifier_children CONCATENATION concat_list
              | identifier_children identifier_children EQ condition
              | primitivedatatype identifier_children EQ condition
              | identifier_children identifier_children
