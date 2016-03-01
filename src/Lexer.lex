@@ -219,7 +219,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
     /* identifiers */
     "main"                          { return symbol(sym.MAIN); }
-    "len"                          { return symbol(sym.LEN); }
+    "len"                           { return symbol(sym.LEN); }
     {Identifier}                    { return symbol(sym.IDENTIFIER, yytext() ); }
 
     "<"                             { return symbol(sym.L_BRACKET); }
