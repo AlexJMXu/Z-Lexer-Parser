@@ -63,7 +63,8 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs;
+nonterminal declist, declist2, declistobj, seqlistwithoutid, seqlist, seqlist2, seqlistobj, dictlist, dictlistwithoutid, dictlist2;
 nonterminal control_flow, forall;
 nonterminal conditions, condition;
 nonterminal alias, print;
