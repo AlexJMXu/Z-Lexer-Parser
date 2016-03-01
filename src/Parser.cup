@@ -72,7 +72,7 @@ nonterminal identifier_children, identifier_list;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
-nonterminal conditions, condition , alllist, inlist;
+nonterminal conditions, condition, conditional_operator, alllist, inlist;
 nonterminal definelen, alias, array_index, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 nonterminal concat_list, concat_list_obj;
