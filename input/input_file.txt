@@ -2,6 +2,7 @@
 shots on alex
 #/
 float fuck = 5.0;
+alias foo bar;
 main {
   forall(n in a) do
     int n = 5;
