@@ -61,6 +61,7 @@ nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
+nonterminal identifier_children, identifier_list, identifier_list_2;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
@@ -132,8 +133,8 @@ exp ::= number
       | unary_operator exp
       | truefalse
       | definelen
-      | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
-      | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
+      | identifier_children L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
+      | identifier_children L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
       | exp IN inlist
       ;     
 
@@ -142,10 +143,17 @@ alllist ::= seqlistwithoutid
           ;
 
 inlist ::= alllist
-        | IDENTIFIER
+        | identifier_children
         ;
 
-array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
+/* allow f.children.child2 */
+identifier_children ::= IDENTIFIER identifier_list;
+
+identifier_list::= PERIOD IDENTIFIER identifier_list_2
+                    | {: /* empty */ :}
+                    ;
+
+array_index ::= identifier_children L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
 definelen ::= LEN L_PAREN exp R_PAREN;          
 
@@ -192,25 +200,25 @@ return_type ::= datatype
 
 aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET
                     | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
-                    | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET
-                    | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype:p2 R_BRACKET
-                    | DICTIONARY L_BRACKET primitivedatatype:p COMMA IDENTIFIER R_BRACKET
-                    | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET
+                    | SEQUENCE L_BRACKET identifier_children R_BRACKET
+                    | DICTIONARY L_BRACKET identifier_children COMMA primitivedatatype:p2 R_BRACKET
+                    | DICTIONARY L_BRACKET primitivedatatype:p COMMA identifier_children R_BRACKET
+                    | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET
                     ;                 
 
-assignment ::= primitivedatatype IDENTIFIER:id EQ exp
-             | IDENTIFIER EQ exp
-             | IDENTIFIER IDENTIFIER
-             | primitivedatatype IDENTIFIER
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-             | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ STRING_LITERAL
-             | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ STRING_LITERAL
-             | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET IDENTIFIER COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET primitivedatatype COMMA IDENTIFIER R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET IDENTIFIER COMMA primitivedatatype R_BRACKET IDENTIFIER EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | IDENTIFIER IDENTIFIER EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
+assignment ::= primitivedatatype identifier_children:id EQ exp
+             | identifier_children EQ exp
+             | identifier_children identifier_children
+             | primitivedatatype identifier_children
+             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+             | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ STRING_LITERAL
+             | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ STRING_LITERAL
+             | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET primitivedatatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET identifier_children COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | identifier_children identifier_children EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
              ;
 
 
@@ -257,10 +265,10 @@ declist2 ::= declistobj:dlo COMMA:c declist2:dl {:
           | declistobj:dlo {: RESULT = new Node(dlo); :}        
           ;        
 
-declistobj ::= datatype:d IDENTIFIER:i {:
+declistobj ::= datatype:d identifier_children:i {:
                   RESULT = (Node)d; 
                :}
-             | IDENTIFIER IDENTIFIER  
+             | identifier_children identifier_children
              ;
 
 seqlist ::= seqlist2:sl2
@@ -301,7 +309,7 @@ dictlistobj ::= exp:e1 COLON:c exp:e2 {:
 
 dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET;
 
-td ::= TYPEDEF:t IDENTIFIER:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {: 
+td ::= TYPEDEF:t identifier_children:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {:
                   RESULT = new Node(t);
 :};
 
@@ -311,14 +319,14 @@ control_flow ::= forall
                | while
                ;
 
-forall ::= FORALL L_PAREN IDENTIFIER IN IDENTIFIER R_PAREN DO statements:ss OD
+forall ::= FORALL L_PAREN identifier_children IN identifier_children R_PAREN DO statements:ss OD
          ;
          
 /* IF statement, 0 or more else ifs, 0 or 1 else, FI */
 conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH 
 ;            
               
-elseifs ::= ELSE_IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss elseifs:e
+elseifs ::= ELSE_IF L_PAREN identifier_children:i R_PAREN THEN statements:ss elseifs:e
           | /* empty */ 
           ;
 
@@ -328,10 +336,10 @@ elses ::= ELSE statements
 
 while ::= WHILE L_PAREN conditions R_PAREN DO statements OD;
 
-alias ::= ALIAS datatype IDENTIFIER
-        | ALIAS IDENTIFIER IDENTIFIER
+alias ::= ALIAS datatype identifier_children
+        | ALIAS identifier_children identifier_children
         ;
 
-read ::= READ IDENTIFIER;
+read ::= READ identifier_children;
 
 print ::= PRINT exp;
