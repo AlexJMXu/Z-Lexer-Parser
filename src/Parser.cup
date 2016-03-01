@@ -2,7 +2,7 @@ import java_cup.runtime.*;
 import java.util.ArrayList;
 
 /*
-TODO WHILE, read, concatenation
+TODO read, concatenation
 */
 
 scan with {: return lexer.next_token(); :};
@@ -131,6 +131,7 @@ exp ::= number
       | definelen
       | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
+      | RETURN exp
       ;
 
 array_index ::= IDENTIFIER L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
