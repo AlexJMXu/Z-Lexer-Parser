@@ -98,6 +98,8 @@ statement ::= full_exp:s {:
             | control_flow
             | print SEMI_COLON
             | read SEMI_COLON
+            | RETURN SEMI_COLON
+            | RETURN exp SEMI_COLON
             ;
 
 full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
@@ -106,7 +108,7 @@ full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | alias SEMI_COLON
            ;                         
 
-main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET;
+main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET SEMI_COLON;
 
 function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp parameter_list R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
            ;
@@ -132,7 +134,6 @@ exp ::= number
       | definelen
       | IDENTIFIER L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | IDENTIFIER L_PAREN parameter_list R_PAREN //Allow functions inside expressions  e.g. foo(int a, char c)
-      | RETURN exp
       | exp IN inlist
       ;     
 
@@ -198,6 +199,9 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
                     ;                 
 
 assignment ::= primitivedatatype IDENTIFIER:id EQ exp
+             | IDENTIFIER EQ exp
+             | IDENTIFIER IDENTIFIER
+             | primitivedatatype IDENTIFIER
              | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
              | SEQUENCE L_BRACKET IDENTIFIER R_BRACKET IDENTIFIER EQ L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
              | SEQUENCE L_BRACKET primitivedatatype R_BRACKET IDENTIFIER EQ STRING_LITERAL
