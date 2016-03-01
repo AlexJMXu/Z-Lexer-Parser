@@ -62,10 +62,10 @@ nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, declist, declist2, declistobj, operator, assignment, return_type, function, parameter_list, conditional, elseifs;
 nonterminal control_flow, forall;
 nonterminal integer_number, float_number, rational_number;
+nonterminal conditions, condition, exp;
 
 precedence left PLUS, MINUS;
 precedence left SLASH, MULT;
-precedence left rational_number, float_number, integer_number;
 
 /* main has to be defined */
 program ::= main_function
@@ -100,10 +100,10 @@ full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | function:f {: RESULT = new Node(f); :} SEMI_COLON
            ;   
 
-conditional ::= IF L_PAREN IDENTIFIER:i R_PAREN THEN statements:ss FINISH 
-              | IF L_PAREN IDENTIFIER:i2 R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
-              | IF L_PAREN IDENTIFIER:i3 R_PAREN THEN statements:ss4 elseifs:eif FINISH
-;                
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss FINISH 
+              | IF L_PAREN conditions R_PAREN THEN statements:ss2 ELSE statements:ss3 FINISH 
+              | IF L_PAREN conditions R_PAREN THEN statements:ss4 elseifs:eif FINISH
+              ;                
               
 elseifs ::= ELSE_IF statements:ss elseifs;               
 
@@ -123,15 +123,20 @@ number ::= rational_number
 
 integer_number ::= NUMBER_LITERAL:num
         |  MINUS NUMBER_LITERAL:num
+        |  L_PAREN NUMBER_LITERAL:num R_PAREN
+        |  L_PAREN MINUS NUMBER_LITERAL:num R_PAREN
         ;
 
 float_number ::= NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2
               |  MINUS NUMBER_LITERAL:nu1 PERIOD NUMBER_LITERAL:num2
+              |  L_PAREN NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2 R_PAREN
+              |  L_PAREN MINUS NUMBER_LITERAL:num1 PERIOD NUMBER_LITERAL:num2 R_PAREN
               ;
 
-rational_number ::= NUMBER_LITERAL SLASH NUMBER_LITERAL
-                 |  MINUS NUMBER_LITERAL SLASH NUMBER_LITERAL
-                 |  integer_number UNDERSCORE NUMBER_LITERAL SLASH NUMBER_LITERAL
+rational_number ::= integer_number SLASH integer_number
+                 |  integer_number UNDERSCORE integer_number SLASH integer_number
+                 |  L_PAREN integer_number SLASH integer_number R_PAREN
+                 |  L_PAREN integer_number UNDERSCORE integer_number SLASH integer_number R_PAREN
                  ;
 
 /* TODO Add tdef types to datatype */
@@ -152,33 +157,32 @@ return_type ::= datatype
               | VOID {: RESULT = new Node("void"); :}
               ;
 
-aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET {: 
-                        Node n = new Node("dict");
-                        n.addChild(new Node("<"));
-                        n.addChild((Node)(p));
-                        n.addChild(new Node(","));
-                        n.addChild((Node)(p2));
-                        n.addChild(new Node(">"));
-                        RESULT = n; 
-                    :}
-                    | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET {:
-                        Node n = new Node("seq");
-                        n.addChild(new Node("<"));
-                        n.addChild((Node)(p));
-                        n.addChild(new Node(">"));
-                        RESULT = n;
-                    :}
+aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET
+                    | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
                 ;
 
 /* TODO Fix assignment e.g. int n = 5 + 6; */
-assignment ::= datatype:dt IDENTIFIER:id EQ number:num {:
-                  Node n = (Node)dt;
-                  n.addChild(new Node(id));
-                  n.addChild(new Node("="));
-                  n.addChild((Node)num);
-                  RESULT = n;
-              :}
-              ;
+/* datatype to identifier
+assignment ::= :dt IDENTIFIER:id EQ number
+            |  primitivedatatype IDENTIFIER:id EQ exp
+            |  SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET IDENTIFIER:id EQ L_SQUARE_BRACKET  R_SQUARE_BRACKET
+            |  DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET IDENTIFIER:id EQ L_CURLY_BRACKET R_CURLY_BRACKET
+            ;
+
+/* TODO add the conditions */
+conditions ::= condition
+            | condition OR conditions
+            | condition AND conditions
+            ;
+
+condition ::= exp L_BRACKET exp
+            | exp R_BRACKET exp
+            | exp EQEQ exp
+            | exp L_BRACKET EQ exp
+            | exp R_BRACKET EQ exp
+            | exp NEGATION EQ exp
+            | exp
+            ;
 
 /* TO-DO find a way to get functions name from fdef */
 

@@ -6,6 +6,12 @@ main {
   forall(n in a) do
     int n = 5;
   od
+  	seq<int> test = [1,2,3];
+	rat fuckyou = 5/3;
+	rat fuckyoutoo = 5_5/3;
+	int lol = 4;
+	int fuckfuckfuck = 5 + 5;
+	if ( lol ) then int fuck = 5 fi
 }
 /#
 rat fuckyou = 5/3;
