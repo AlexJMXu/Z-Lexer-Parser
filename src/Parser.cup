@@ -69,6 +69,7 @@ nonterminal number, full_exp, dictlistobj, assignment, return_type, function, pa
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
 nonterminal identifier_children, identifier_list;
+nonterminal square_bracket_list, square_bracket_list_2, square_bracket_obj, square_bracket_obj_2;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
@@ -159,11 +160,26 @@ inlist ::= alllist
         ;
 
 /* allow f.children.child2 */
-identifier_children ::= IDENTIFIER identifier_list;
+identifier_children ::= IDENTIFIER identifier_list square_bracket_list;
 
 identifier_list::= PERIOD IDENTIFIER identifier_list
                     | {: /* empty */ :}
                     ;
+
+square_bracket_list ::= square_bracket_list_2
+                      | {: /* empty */ :}
+                      ;
+
+square_bracket_list_2 ::= square_bracket_obj square_bracket_list_2
+                        | square_bracket_obj
+                        ;
+
+square_bracket_obj ::= L_SQUARE_BRACKET square_bracket_obj_2  R_SQUARE_BRACKET
+                     ;
+
+square_bracket_obj_2 ::= exp COLON exp
+                       | exp
+                       ;
 
 array_index ::= identifier_children L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
