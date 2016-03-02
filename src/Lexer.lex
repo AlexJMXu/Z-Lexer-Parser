@@ -254,7 +254,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
     "||"                            { return symbol(sym.OR); }
 
     /* comments */
-    {Comment}                       { System.out.println("Ignoring comment"); }
+    {Comment}                       { /* ignoring comment */ }
 
     /* whitespace */
     {WhiteSpace}                    { /* ignore whitespace */  }
