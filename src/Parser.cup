@@ -74,7 +74,7 @@ nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
 nonterminal conditions, condition, conditional_operator, alllist, inlist;
-nonterminal definelen, alias, array_index, print, read, truefalse;
+nonterminal definelen, alias, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 nonterminal concat_list, concat_list_obj;
 
@@ -137,13 +137,11 @@ exp ::= number
       | CHAR_LITERAL
       | STRING_LITERAL
       | identifier_children
-      | array_index
       | exp binary_operator exp
       | L_PAREN exp R_PAREN
       | unary_operator exp
       | truefalse
       | definelen
-      | identifier_children L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
       | function_call
       | exp IN inlist
       ;     
@@ -170,18 +168,17 @@ square_bracket_list ::= square_bracket_list_2
                       | {: /* empty */ :}
                       ;
 
-square_bracket_list_2 ::= square_bracket_obj square_bracket_list_2
+
+square_bracket_list_2 ::= square_bracket_list_2 square_bracket_obj
                         | square_bracket_obj
                         ;
 
 square_bracket_obj ::= L_SQUARE_BRACKET square_bracket_obj_2  R_SQUARE_BRACKET
                      ;
 
-square_bracket_obj_2 ::= exp COLON exp
+square_bracket_obj_2 ::= exp COLON exp //Sequence Splicing
                        | exp
                        ;
-
-array_index ::= identifier_children L_SQUARE_BRACKET exp R_SQUARE_BRACKET;
 
 definelen ::= LEN L_PAREN exp R_PAREN;          
 
