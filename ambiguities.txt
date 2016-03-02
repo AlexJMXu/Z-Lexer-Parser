@@ -1,1 +1,8 @@
+Written in markdown syntax
+
 * In the Z specification language, top was defined in seq/dict but was not mentioned whether or not it could be used as a normal assignment (e.g. top a = 5;), so we assumed that it was possible to assign as a top type.
+* It was not specified whether you could have dictionaries nested in dictionaries, similarly for sequences, or allowing to nest them interchangeably. We assume that they are since such constructs are possible in various popular programming languages, such as Java.
+  * For example, we assume that `dict<dict<int,int>,int>  x = {[1,2]:[1,2]};` is valid
+  * `seq<seq<int>> x = [[1,2],[1,2]];` is valid
+  *  `dict<seq<int>, seq<char>> x = {[4,2]:['c','b']};` is valid (the equivalent in Java using ArrayList and HashMap is valid. See https://ideone.com/yrqyCb)
+
