@@ -65,7 +65,7 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal main_statements, statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
+nonterminal number, full_exp, dictlistobj, dictlistobj2, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
 nonterminal identifier_children, identifier_list;
@@ -337,14 +337,13 @@ dictlist2 ::= dictlistobj:dlo COMMA:c dictlist2:dl {:
             | dictlistobj:dlo {: RESULT = new Node(dlo); :}
             ; 
 
-dictlistobj ::= exp:e1 COLON:c exp:e2 {:
-                  Node n = new Node(c);
-                  n.addChild(new Node(e1));
-                  n.addChild(new Node(e2)); 
-                  RESULT = n; :}
-              | dictlistwithoutid:dl 
-              | seqlistwithoutid:sl  
+dictlistobj ::= dictlistobj2 COLON:c dictlistobj2 
 ;
+
+dictlistobj2 ::= exp
+              | dictlistwithoutid
+              | seqlistwithoutid
+              ;
 
 dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET;
 
