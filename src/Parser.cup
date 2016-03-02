@@ -78,7 +78,9 @@ nonterminal definelen, alias, print, read, truefalse;
 nonterminal exp, unary_operator, binary_operator, integer_number, float_number, rational_number;
 nonterminal concat_list, concat_list_obj;
 
-precedence left PERIOD, IN, COLON, AND, OR, CONCATENATION, CARET, SLASH, MULT, PLUS, MINUS;
+precedence left PERIOD, IN, COLON, AND, OR, CONCATENATION;
+precedence left CARET, SLASH, MULT, PLUS, MINUS;
+precedence left L_PAREN, R_PAREN;
 
 /* main has to be defined */
 program ::= main_function
@@ -146,6 +148,7 @@ exp ::= number
       | definelen
       | function_call
       | exp IN inlist
+      | exp IN L_PAREN inlist R_PAREN
       ;     
 
 function_call ::= identifier_children L_PAREN constructor_list R_PAREN; //Allow functions inside expressions  e.g. foo(a, "12", 14);
@@ -155,8 +158,7 @@ alllist ::= seqlistwithoutid
           | dictlistwithoutid
           ;
 
-inlist ::= alllist
-        | identifier_children
+inlist ::= concat_list
         ;
 
 /* allow f.children.child2 */
@@ -204,7 +206,6 @@ conditional_operator ::=  L_BRACKET
                       | unary_operator EQ
                       | AND
                       | OR
-                      | IN
                       ;
 
 integer_number ::= NUMBER_LITERAL:num
@@ -295,6 +296,8 @@ conditions ::= condition
             | primitivedatatype
             | unary_operator primitivedatatype
             | truefalse
+            | exp IN concat_list
+            | exp IN L_PAREN concat_list R_PAREN
             ;
 
 condition ::= exp conditional_operator exp
@@ -332,7 +335,9 @@ seqlist2 ::= seqlistobj:slo COMMA:c seqlist2:sl {:
            | seqlistobj:slo {: RESULT = new Node(slo); :}
            ;      
 
-seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET;   
+seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
+                  |  L_PAREN L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET R_PAREN
+                  ; 
 
 seqlistobj ::= exp:e
              | seqlistwithoutid:sl
@@ -358,7 +363,9 @@ dictlistobj2 ::= exp
               | seqlistwithoutid
               ;
 
-dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET;
+dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+                    | L_PAREN L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET R_PAREN
+                    ;
 
 td ::= TYPEDEF:t identifier_children:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {:
                   RESULT = new Node(t);
