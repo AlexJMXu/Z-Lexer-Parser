@@ -5,4 +5,5 @@ Written in markdown syntax
   * For example, we assume that `dict<dict<int,int>,int>  x = {[1,2]:[1,2]};` is valid
   * `seq<seq<int>> x = [[1,2],[1,2]];` is valid
   *  `dict<seq<int>, seq<char>> x = {[4,2]:['c','b']};` is valid (the equivalent in Java using ArrayList and HashMap is valid. See https://ideone.com/yrqyCb)
-
+* The language specification does not discuss reserved keywords. We assume that keywords like `int`, `dict`, `alias`, `print` are reserved keywords, meaning that they cannot be used as names for identifiers.
+* Since the test file `n-main1.s` is supposed to fail, we assume that the **main** function has to have at least one statement in its body for it to be valid.
