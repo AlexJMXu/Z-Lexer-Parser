@@ -14,21 +14,19 @@ bin/$(LANG).class: src/Lexer.lex src/Parser.cup src/$(LANG).java
 TESTS = $(TESTCASES)
 .PHONY: test $(TESTCASES)
 
-test:
-	rm -f result.csv
-	$(TESTCASES)
+test: $(TESTCASES) $(shell rm -f 'result.csv')
 	echo done
 
 $(TESTS):
 	echo $@ >> result.csv
 	./runTests.sh $(VERCUP) $(LANG) $@
 
-lexertest:
+lexertest: all
 	mkdir -p out
 	javac -d out/ -cp lib/java-cup-$(VERCUP)-runtime.jar src/TestLexer.java src/Lexer.java src/sym.java src/Parser.java
 	java -cp lib/java-cup-$(VERCUP)-runtime.jar:out TestLexer
 
-lexertestwindows:
+lexertestwindows: all
 	mkdir -p out
 	javac -d out/ -cp lib/java-cup-$(VERCUP)-runtime.jar src/TestLexer.java src/Lexer.java src/sym.java src/Parser.java
 	java -cp lib/java-cup-$(VERCUP)-runtime.jar\;out TestLexer
