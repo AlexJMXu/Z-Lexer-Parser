@@ -7,3 +7,4 @@ Written in markdown syntax
   *  `dict<seq<int>, seq<char>> x = {[4,2]:['c','b']};` is valid (the equivalent in Java using ArrayList and HashMap is valid. See https://ideone.com/yrqyCb)
 * The language specification does not discuss reserved keywords. We assume that keywords like `int`, `dict`, `alias`, `print` are reserved keywords, meaning that they cannot be used as names for identifiers.
 * Since the test file `n-main1.s` is supposed to fail, we assume that the **main** function has to have at least one statement in its body for it to be valid.
+* We are assuming that only the ASCII single quote `'` is valid. Characters such as `’` will are illegal and are rejected by the Lexer
