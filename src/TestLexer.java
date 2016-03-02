@@ -14,9 +14,10 @@ class TestLexer {
                 Parser parser = new Parser(lexer);
                 //parser.debug(true);
 
-                System.out.println("digraph G {");
                 Symbol result = parser.parse();
-                System.out.println("}");
+                if(!parser.syntaxErrors){
+                    System.out.println("parsing successful");
+                }
             } catch (Exception e) {
                 // Commented out because this output is uniformative.  ETB
                 //e.printStackTrace();
