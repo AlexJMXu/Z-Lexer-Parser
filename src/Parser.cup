@@ -144,7 +144,9 @@ exp ::= number
       | unary_operator exp
       | truefalse
       | definelen
-      | identifier_children L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET // Sequence Splicing
+      | identifier_children L_SQUARE_BRACKET COLON exp R_SQUARE_BRACKET
+      | identifier_children L_SQUARE_BRACKET exp COLON exp R_SQUARE_BRACKET
+      | identifier_children L_SQUARE_BRACKET exp COLON R_SQUARE_BRACKET // Sequence Splicing
       | function_call
       | exp IN inlist
       ;     
