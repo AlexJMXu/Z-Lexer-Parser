@@ -323,6 +323,7 @@ seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET;
 
 seqlistobj ::= exp:e
              | seqlistwithoutid:sl
+             | dictlistwithoutid:dl
              ; 
 
 dictlist ::= dictlist2:dl2
@@ -341,7 +342,8 @@ dictlistobj ::= exp:e1 COLON:c exp:e2 {:
                   n.addChild(new Node(e1));
                   n.addChild(new Node(e2)); 
                   RESULT = n; :}
-              | dictlistwithoutid:dl   
+              | dictlistwithoutid:dl 
+              | seqlistwithoutid:sl  
 ;
 
 dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET;
