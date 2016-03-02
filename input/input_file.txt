@@ -1,17 +1,16 @@
 main {
-  seq<int> a = [1,2,3];
-  seq<int> b = reverse(a);
-  return b;
+  fibonacci( 13 );
+  return;
 };
 
-fdef seq<top> reverse (seq<top> inseq) { 
-  seq<top> outseq = [];
-  int i = 0;
-      while (i < len(l)) do
-    outseq = inseq[i] :: outseq;
-    i = i + 1;
-    od
-  return outseq; 
-} ;
+fdef fibonacci(int pos) : int { 
+  if (pos == -1) {
+    return 0;
+  }
+  if (pos == 0) {
+    return 1;
+  }
+  return fibonacci(pos-1) + fibonacci(pos-2);
+}
 
 

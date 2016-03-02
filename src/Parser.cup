@@ -187,6 +187,7 @@ conditional_operator ::=  L_BRACKET
                       | unary_operator EQ
                       | AND
                       | OR
+                      | IN
                       ;
 
 integer_number ::= NUMBER_LITERAL:num
