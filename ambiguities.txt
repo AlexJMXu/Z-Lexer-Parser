@@ -8,3 +8,6 @@ Written in markdown syntax
 * The language specification does not discuss reserved keywords. We assume that keywords like `int`, `dict`, `alias`, `print` are reserved keywords, meaning that they cannot be used as names for identifiers.
 * Since the test file `n-main1.s` is supposed to fail, we assume that the **main** function has to have at least one statement in its body for it to be valid.
 * We are assuming that only the ASCII single quote `'` is valid. Characters such as `’` will are illegal and are rejected by the Lexer
+* For **top**:
+  * `seq<top> s = [1, 1/2, 3.14, ['f', 'o', 'u', 'r'] ];` is valid, since `['f', 'o', 'u', 'r']` is of type **seq<char>** which is a type of **top**
+  * `dict<int,top> d = {1:1, 2:'c',` 7:3/5, 3:{1:T}};`is valid. `{1:T}` is of type **top**, however it would give a semantic error in the semantical analysis, as we do not know the individual types of the key and value of that nested dictionary, since it is never defined
