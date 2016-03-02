@@ -62,7 +62,7 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, COMM
 terminal NEGATION, AND, OR;
 terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN;
 
-nonterminal statements, statement, program, td;
+nonterminal main_statements, statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
 nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
@@ -113,13 +113,15 @@ statement ::= full_exp:s {:
             | function_call SEMI_COLON
             ;
 
+main_statements ::= statements:ss statement:s;
+
 full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
            | td:t {: RESULT = new Node(t); :} SEMI_COLON
            | function:f {: RESULT = new Node(f); :} SEMI_COLON
            | alias SEMI_COLON
            ;                         
 
-main_function ::= MAIN L_CURLY_BRACKET statements:ss R_CURLY_BRACKET SEMI_COLON;
+main_function ::= MAIN L_CURLY_BRACKET main_statements:ss R_CURLY_BRACKET SEMI_COLON;
 
 function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp parameter_list R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
            ;
@@ -177,6 +179,8 @@ square_bracket_obj ::= L_SQUARE_BRACKET square_bracket_obj_2  R_SQUARE_BRACKET
                      ;
 
 square_bracket_obj_2 ::= exp COLON exp //Sequence Splicing
+                       | exp COLON
+                       | COLON exp
                        | exp
                        ;
 
@@ -200,6 +204,7 @@ conditional_operator ::=  L_BRACKET
                       | unary_operator EQ
                       | AND
                       | OR
+                      | IN
                       ;
 
 integer_number ::= NUMBER_LITERAL:num
@@ -242,18 +247,19 @@ aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitiveda
 assignment ::= primitivedatatype identifier_children:id EQ exp
              | identifier_children EQ exp
              | identifier_children EQ condition
+             | identifier_children EQ identifier_children CONCATENATION concat_list
              | identifier_children identifier_children EQ condition
              | primitivedatatype identifier_children EQ condition
              | identifier_children identifier_children
              | primitivedatatype identifier_children 
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ STRING_LITERAL 
+             | SEQUENCE L_BRACKET datatype R_BRACKET identifier_children EQ STRING_LITERAL 
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ STRING_LITERAL
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ concat_list 
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ concat_list
-             | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | SEQUENCE L_BRACKET datatype R_BRACKET identifier_children EQ concat_list
+             | DICTIONARY L_BRACKET datatype COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
              | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET primitivedatatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET identifier_children COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET datatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET identifier_children COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
              | identifier_children identifier_children EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
              ;
 
@@ -288,6 +294,7 @@ conditions ::= condition
             | unary_operator identifier_children
             | primitivedatatype
             | unary_operator primitivedatatype
+            | truefalse
             ;
 
 condition ::= exp conditional_operator exp
