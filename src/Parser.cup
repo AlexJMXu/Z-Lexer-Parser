@@ -237,14 +237,14 @@ assignment ::= primitivedatatype identifier_children:id EQ exp
              | primitivedatatype identifier_children EQ condition
              | identifier_children identifier_children
              | primitivedatatype identifier_children 
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ STRING_LITERAL 
+             | SEQUENCE L_BRACKET datatype R_BRACKET identifier_children EQ STRING_LITERAL 
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ STRING_LITERAL
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ concat_list 
-             | SEQUENCE L_BRACKET primitivedatatype R_BRACKET identifier_children EQ concat_list
-             | DICTIONARY L_BRACKET primitivedatatype COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | SEQUENCE L_BRACKET datatype R_BRACKET identifier_children EQ concat_list
+             | DICTIONARY L_BRACKET datatype COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
              | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET primitivedatatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET identifier_children COMMA primitivedatatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET datatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET identifier_children COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
              | identifier_children identifier_children EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
              ;
 
