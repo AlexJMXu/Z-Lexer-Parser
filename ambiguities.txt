@@ -9,9 +9,6 @@ Formatted with ***Markdown***
 ### Reserved Keywords
 The language specification does not discuss reserved keywords. We assume that keywords like `int`, `dict`, `alias`, `print` are reserved keywords, meaning that they cannot be used as names for identifiers.
 
-### Empty Main
-Since the test file `n-main1.s` is supposed to fail, we assume that the **main** function has to have at least one statement in its body for it to be valid.
-
 ### Top
 
 * In the Z specification language, top was defined in seq/dict but was not mentioned whether or not it could be used as a normal assignment (e.g. `top a = 5;`). If assignment were allowed, it would make all data types pointless, and the compiler would not be able to determine what type it is dealing with.
