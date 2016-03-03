@@ -318,6 +318,7 @@ declist2 ::= declistobj:dlo COMMA:c declist2:dl {:
           | declistobj:dlo {: RESULT = new Node(dlo); :}        
           ;
 
+/* declistobj can't call on datatype as it can't contain top */
 declistobj ::= primitivedatatype:p identifier_children:i {:
                   RESULT = (Node)p; 
                :}
