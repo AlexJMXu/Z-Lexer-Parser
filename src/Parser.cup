@@ -237,11 +237,11 @@ return_type ::= primitivedatatype
               | VOID {: RESULT = new Node("void"); :}
               ;
 
-aggregatedatatype ::= DICTIONARY L_BRACKET primitivedatatype:p COMMA primitivedatatype:p2 R_BRACKET
-                    | SEQUENCE L_BRACKET primitivedatatype:p R_BRACKET
+aggregatedatatype ::= SEQUENCE L_BRACKET datatype R_BRACKET
                     | SEQUENCE L_BRACKET identifier_children R_BRACKET
-                    | DICTIONARY L_BRACKET identifier_children COMMA primitivedatatype:p2 R_BRACKET
-                    | DICTIONARY L_BRACKET primitivedatatype:p COMMA identifier_children R_BRACKET
+                    | DICTIONARY L_BRACKET datatype COMMA datatype R_BRACKET
+                    | DICTIONARY L_BRACKET identifier_children COMMA datatype R_BRACKET
+                    | DICTIONARY L_BRACKET datatype COMMA identifier_children R_BRACKET
                     | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET
                     ;                 
 
