@@ -64,9 +64,10 @@ terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACK
 nonterminal main_statements, statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, dictlistobj, dictlistobj2, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
+nonterminal number, full_exp, dictlistobj, assignment, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
+nonterminal listobj;
 nonterminal declist, declist2, declistobj;
-nonterminal seqlistwithoutid, seqlist, seqlist2, seqlistobj;
+nonterminal seqlistwithoutid, seqlist, seqlist2;
 nonterminal identifier_children, identifier_list;
 nonterminal square_bracket_list, square_bracket_list_2, square_bracket_obj, square_bracket_obj_2;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
@@ -258,10 +259,10 @@ assignment ::= primitivedatatype identifier_children:id EQ exp
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ STRING_LITERAL
              | SEQUENCE L_BRACKET identifier_children R_BRACKET identifier_children EQ concat_list 
              | SEQUENCE L_BRACKET datatype R_BRACKET identifier_children EQ concat_list
-             | DICTIONARY L_BRACKET datatype COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET datatype COMMA identifier_children R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-             | DICTIONARY L_BRACKET identifier_children COMMA datatype R_BRACKET identifier_children EQ L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
+             | DICTIONARY L_BRACKET datatype COMMA datatype R_BRACKET identifier_children EQ dictlist:dl
+             | DICTIONARY L_BRACKET identifier_children COMMA identifier_children R_BRACKET identifier_children EQ dictlist:dl 
+             | DICTIONARY L_BRACKET datatype COMMA identifier_children R_BRACKET identifier_children EQ dictlist:dl 
+             | DICTIONARY L_BRACKET identifier_children COMMA datatype R_BRACKET identifier_children EQ dictlist:dl 
              | identifier_children identifier_children EQ constructor_list //Allow new type assignment e.g. person d = "Shin", "Yoo", 30;
              ;
 
@@ -330,27 +331,27 @@ declistobj ::= primitivedatatype:p identifier_children:i {:
              ;
 
 seqlist ::= seqlist2:sl2
-          | {: /* empty */ :}
           ;
 
-seqlist2 ::= seqlistobj:slo COMMA:c seqlist2:sl {:
+seqlist2 ::= listobj:lo COMMA:c seqlist2:sl {:
                   Node n = new Node(sl);
-                  n.addChild(new Node(slo));
+                  n.addChild(new Node(lo));
                   RESULT = n; :}
-           | seqlistobj:slo {: RESULT = new Node(slo); :}
+           | listobj:lo {: RESULT = new Node(lo); :}
            ;      
 
 seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
                   |  L_PAREN L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET R_PAREN
                   ; 
 
-seqlistobj ::= exp:e
-             | seqlistwithoutid:sl
-             | dictlistwithoutid:dl
-             ; 
+listobj ::= exp:e
+          | seqlistwithoutid:sl
+          | dictlistwithoutid:dl
+          ; 
 
-dictlist ::= dictlist2:dl2
-           | {: /* empty */ :}
+dictlist ::= L_CURLY_BRACKET dictlist2:dl2 R_CURLY_BRACKET
+           | listobj //For function calls
+           | L_CURLY_BRACKET R_CURLY_BRACKET //empty
            ;
 
 dictlist2 ::= dictlistobj:dlo COMMA:c dictlist2:dl {:
@@ -360,13 +361,8 @@ dictlist2 ::= dictlistobj:dlo COMMA:c dictlist2:dl {:
             | dictlistobj:dlo {: RESULT = new Node(dlo); :}
             ; 
 
-dictlistobj ::= dictlistobj2 COLON:c dictlistobj2 
+dictlistobj ::= listobj COLON:c listobj
 ;
-
-dictlistobj2 ::= exp
-              | dictlistwithoutid
-              | seqlistwithoutid
-              ;
 
 dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
                     | L_PAREN L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET R_PAREN
