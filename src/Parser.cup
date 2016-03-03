@@ -342,6 +342,7 @@ seqlist2 ::= listobj:lo COMMA:c seqlist2:sl {:
 
 seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
                   |  L_PAREN L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET R_PAREN
+                  | L_SQUARE_BRACKET R_SQUARE_BRACKET //empty seq
                   ; 
 
 listobj ::= exp:e
