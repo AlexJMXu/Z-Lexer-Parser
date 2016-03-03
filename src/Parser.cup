@@ -221,6 +221,7 @@ rational_number ::= integer_number SLASH integer_number
 
 datatype ::= primitivedatatype:p {: RESULT = new Node(p); :}
            | aggregatedatatype:a {: RESULT = new Node(a); :}
+           | TOP:t {: RESULT = new Node("top"); :} //top can't be used in assign so it's put here
            ;
 
 primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
@@ -228,7 +229,6 @@ primitivedatatype ::= INTEGER:i {: RESULT = new Node("int"); :}
                     | RATIONAL:r {: RESULT = new Node("rat"); :}
                     | CHARACTER:c {: RESULT = new Node("char"); :}
                     | FLOAT:f {: RESULT = new Node("float"); :}
-                    | TOP:t {: RESULT = new Node("top"); :} 
                     ;
 
 /* valid return types for functions */
@@ -318,8 +318,11 @@ declist2 ::= declistobj:dlo COMMA:c declist2:dl {:
           | declistobj:dlo {: RESULT = new Node(dlo); :}        
           ;
 
-declistobj ::= datatype:d identifier_children:i {:
-                  RESULT = (Node)d; 
+declistobj ::= primitivedatatype:p identifier_children:i {:
+                  RESULT = (Node)p; 
+               :}
+             | aggregatedatatype:a identifier_children:i {:
+                  RESULT = (Node)a;
                :}
              | identifier_children identifier_children
              ;
