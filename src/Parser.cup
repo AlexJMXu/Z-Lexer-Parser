@@ -94,19 +94,11 @@ global_space ::= global_space full_exp
                | full_exp
                ;
 
-statements ::= statements:ss statement:s {:
-                  Node n = (Node)ss;
-                  n.addChild((Node)s);
-                  RESULT = n;
-               :}
-             | /* empty */ {:
-                  RESULT = new Node("Statements");
-               :}
+statements ::= statements statement
+             | /* empty */
              ;
 
-statement ::= full_exp:s {:
-                RESULT = (Node)s;
-              :}
+statement ::= full_exp
             | control_flow
             | print SEMI_COLON
             | read SEMI_COLON
@@ -117,15 +109,16 @@ statement ::= full_exp:s {:
 
 main_statements ::= statements:ss statement:s;
 
-full_exp ::= assignment:a {: RESULT = new Node(a); :} SEMI_COLON
-           | td:t {: RESULT = new Node(t); :} SEMI_COLON
-           | function:f {: RESULT = new Node(f); :} SEMI_COLON
+full_exp ::= assignment SEMI_COLON
+           | td SEMI_COLON
+           | function SEMI_COLON
            | alias SEMI_COLON
            ;                         
 
-main_function ::= MAIN L_CURLY_BRACKET main_statements:ss R_CURLY_BRACKET SEMI_COLON;
+main_function ::= MAIN L_CURLY_BRACKET main_statements R_CURLY_BRACKET SEMI_COLON
+                ;
 
-function ::= FUNCTION_DEFINITION:f return_type IDENTIFIER:i L_PAREN:lp parameter_list R_PAREN:rp L_CURLY_BRACKET:lc statements:ss R_CURLY_BRACKET:rc
+function ::= FUNCTION_DEFINITION return_type IDENTIFIER L_PAREN parameter_list R_PAREN L_CURLY_BRACKET statements R_CURLY_BRACKET
            ;
 
 /* parameter list for function */
@@ -313,65 +306,51 @@ declist ::= declist2:dl2
           | {: /* empty */ :}     
           ;
 
-declist2 ::= declistobj:dlo COMMA:c declist2:dl {: 
-                  Node n = new Node(dl);
-                  n.addChild(new Node(dlo));
-                  RESULT = n; :}
-          | declistobj:dlo {: RESULT = new Node(dlo); :}        
+declist2 ::= declistobj COMMA declist2
+          | declistobj        
           ;
 
 /* declistobj can't call on datatype as it can't contain top */
-declistobj ::= primitivedatatype:p identifier_children:i {:
-                  RESULT = (Node)p; 
-               :}
-             | aggregatedatatype:a identifier_children:i {:
-                  RESULT = (Node)a;
-               :}
+declistobj ::= primitivedatatype identifier_children
+             | aggregatedatatype identifier_children
              | identifier_children identifier_children
              ;
 
-seqlist ::= seqlist2:sl2
+seqlist ::= seqlist2
           ;
 
-seqlist2 ::= listobj:lo COMMA:c seqlist2:sl {:
-                  Node n = new Node(sl);
-                  n.addChild(new Node(lo));
-                  RESULT = n; :}
-           | listobj:lo {: RESULT = new Node(lo); :}
+seqlist2 ::= listobj COMMA seqlist2
+           | listobj
            ;      
 
-seqlistwithoutid ::= L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET
-                  |  L_PAREN L_SQUARE_BRACKET seqlist:sl R_SQUARE_BRACKET R_PAREN
+seqlistwithoutid ::= L_SQUARE_BRACKET seqlist R_SQUARE_BRACKET
+                  |  L_PAREN L_SQUARE_BRACKET seqlist R_SQUARE_BRACKET R_PAREN
                   | L_SQUARE_BRACKET R_SQUARE_BRACKET //empty seq
                   ; 
 
-listobj ::= exp:e
-          | seqlistwithoutid:sl
-          | dictlistwithoutid:dl
+listobj ::= exp
+          | seqlistwithoutid
+          | dictlistwithoutid
           ; 
 
-dictlist ::= L_CURLY_BRACKET dictlist2:dl2 R_CURLY_BRACKET
+dictlist ::= L_CURLY_BRACKET dictlist2 R_CURLY_BRACKET
            | listobj //For function calls
            | L_CURLY_BRACKET R_CURLY_BRACKET //empty
            ;
 
-dictlist2 ::= dictlistobj:dlo COMMA:c dictlist2:dl {:
-                  Node n = new Node(dl);
-                  n.addChild(new Node(dlo));
-                  RESULT = n; :}
-            | dictlistobj:dlo {: RESULT = new Node(dlo); :}
+dictlist2 ::= dictlistobj COMMA dictlist2
+            | dictlistobj
             ; 
 
-dictlistobj ::= listobj COLON:c listobj
-;
+dictlistobj ::= listobj COLON listobj
+              ;
 
-dictlistwithoutid ::= L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET
-                    | L_PAREN L_CURLY_BRACKET dictlist:dl R_CURLY_BRACKET R_PAREN
+dictlistwithoutid ::= L_CURLY_BRACKET dictlist R_CURLY_BRACKET
+                    | L_PAREN L_CURLY_BRACKET dictlist R_CURLY_BRACKET R_PAREN
                     ;
 
-td ::= TYPEDEF:t identifier_children:i L_CURLY_BRACKET:l declist:dl R_CURLY_BRACKET:r {:
-                  RESULT = new Node(t);
-:};
+td ::= TYPEDEF identifier_children L_CURLY_BRACKET declist R_CURLY_BRACKET
+    ;
 
 /* collection of control flow e.g. if and forall */
 control_flow ::= forall
@@ -379,14 +358,14 @@ control_flow ::= forall
                | while
                ;
 
-forall ::= FORALL L_PAREN identifier_children IN identifier_children R_PAREN DO statements:ss OD
+forall ::= FORALL L_PAREN identifier_children IN identifier_children R_PAREN DO statements OD
          ;
          
 /* IF statement, 0 or more else ifs, 0 or 1 else, FI */
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs:eif elses FINISH 
-;            
+conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs elses FINISH 
+              ;            
 
-elseifs ::= ELSE_IF L_PAREN conditions R_PAREN THEN statements:ss elseifs:e
+elseifs ::= ELSE_IF L_PAREN conditions R_PAREN THEN statements elseifs
           | /* empty */ 
           ;
 
