@@ -1,6 +1,7 @@
 Written in markdown syntax
 
-* In the Z specification language, top was defined in seq/dict but was not mentioned whether or not it could be used as a normal assignment (e.g. top a = 5;), so we assumed that it was possible to assign as a top type.
+* In the Z specification language, top was defined in seq/dict but was not mentioned whether or not it could be used as a normal assignment (e.g. `top a = 5;`). If assignment were allowed, it would make all data types pointless, and the compiler would not be able to determine what type it is dealing with.
+  Therefore `top a = 5;` is invalid;
 * It was not specified whether you could have dictionaries nested in dictionaries, similarly for sequences, or allowing to nest them interchangeably. We assume that they are since such constructs are possible in various popular programming languages, such as Java.
   * For example, we assume that `dict<dict<int,int>,int>  x = {[1,2]:[1,2]};` is valid
   * `seq<seq<int>> x = [[1,2],[1,2]];` is valid
@@ -10,4 +11,4 @@ Written in markdown syntax
 * We are assuming that only the ASCII single quote `'` is valid. Characters such as `’` will are illegal and are rejected by the Lexer
 * For **top**:
   * `seq<top> s = [1, 1/2, 3.14, ['f', 'o', 'u', 'r'] ];` is valid, since `['f', 'o', 'u', 'r']` is of type **seq<char>** which is a type of **top**
-  * `dict<int,top> d = {1:1, 2:'c',` 7:3/5, 3:{1:T}};`is valid. `{1:T}` is of type **top**, however it would give a semantic error in the semantical analysis, as we do not know the individual types of the key and value of that nested dictionary, since it is never defined
+  * `dict<int,top> d = {1:1, 2:'c',` 7:3/5, 3:{1:T}};`is valid. `{1:T}` is of type **top**, however it would give a semantic error in the semantic analysis, as we do not know the individual types of the key and value of that nested dictionary, since it is never defined
