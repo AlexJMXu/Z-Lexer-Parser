@@ -68,8 +68,8 @@ nonterminal number, full_exp, dictlistobj, assignment, return_type, function, pa
 nonterminal listobj;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2;
-nonterminal identifier_children, identifier_list;
-nonterminal square_bracket_list, square_bracket_list_2, square_bracket_obj, square_bracket_obj_2;
+nonterminal identifier_children, identifier_follow_list, identifier_follow_list_2, identifier_follow_obj;
+nonterminal square_bracket_obj, square_bracket_obj_2;
 nonterminal dictlist, dictlistwithoutid, dictlist2;
 nonterminal constructor_list, constructor_list_2, constructor_list_obj;
 nonterminal control_flow, forall, while;
@@ -155,28 +155,27 @@ inlist ::= concat_list
         ;
 
 /* allow f.children.child2 */
-identifier_children ::= IDENTIFIER identifier_list square_bracket_list;
+identifier_children ::= IDENTIFIER identifier_follow_list;
 
-identifier_list::= PERIOD IDENTIFIER identifier_list
-                    | {: /* empty */ :}
-                    ;
+identifier_follow_list ::= identifier_follow_list_2
+                         | {: /* emtpy */ :}
+                         ;
 
-square_bracket_list ::= square_bracket_list_2
-                      | {: /* empty */ :}
-                      ;
+identifier_follow_list_2 ::= identifier_follow_list_2 identifier_follow_obj
+                           | identifier_follow_obj
+                           ;
 
-
-square_bracket_list_2 ::= square_bracket_list_2 square_bracket_obj
-                        | square_bracket_obj
+identifier_follow_obj ::= square_bracket_obj
+                        | PERIOD IDENTIFIER
                         ;
 
-square_bracket_obj ::= L_SQUARE_BRACKET square_bracket_obj_2  R_SQUARE_BRACKET
+square_bracket_obj ::= L_SQUARE_BRACKET square_bracket_obj_2 R_SQUARE_BRACKET
                      ;
 
-square_bracket_obj_2 ::= exp COLON exp //Sequence Splicing
-                       | exp COLON
-                       | COLON exp
-                       | exp
+square_bracket_obj_2 ::= exp COLON exp // e.g. [3:4] Sequence Splicing
+                       | exp COLON     // e.g. [3:]
+                       | COLON exp     // e.g. [:3]
+                       | exp           // e.g. [3]
                        ;
 
 definelen ::= LEN L_PAREN exp R_PAREN;          
