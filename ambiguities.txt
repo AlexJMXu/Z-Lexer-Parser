@@ -34,3 +34,20 @@ As a result `rat a = (2)_3/2;` is invalid. Otherwise, one would be able to make 
 ### Illegal Characters
 
 We are assuming that only the ASCII single quote `'` is valid. Characters such as `’` will are illegal and are rejected by the Lexer
+
+### If Else empty bodies
+
+We assume that the bodies of `if` and `else` and `elif` are allowed to have empty bodies.
+
+For example:
+
+```
+main {
+    if ( i < 2 ) then
+    else
+    elif(i >= 2)
+    fi
+};
+```
+
+is valid
