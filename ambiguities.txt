@@ -32,22 +32,6 @@ As a result `rat a = (2)_3/2;` is invalid. Otherwise, one would be able to make 
 
 We are assuming that only the ASCII single quote `'` is valid. Characters such as `’` will are illegal and are rejected by the Lexer
 
-### If Else empty bodies
-
-We assume that the bodies of `if` and `else` and `elif` are allowed to have empty bodies.
-
-For example:
-
-```
-main {
-    if ( i < 2 ) then
-    else
-    elif(i >= 2)
-    fi
-};
-```
-
-is valid
 
 ### Main Statement Requirement
 
@@ -70,7 +54,7 @@ A statement is defined in the language specification as:
 Therefore, the following code is invalid since it is missing a statement in the main function:
 
 ```
-mai {
+main {
     int foo = 5;
 };`
 ```
@@ -81,4 +65,26 @@ main {
     int foo = 5;
     read 5;
 };`
+
+### Bodies 
+
+We are assuming that bodies (when referred to in the specifications, such as in main and if statements) have variable declarations (if any) followed by AT LEAST one statement IN THAT ORDER. For example, a rejected test would be if in main, there are variable declarations, followed by statements, followed by another variable declaration (it would fail at this declaration).
+
+### If Else bodies
+
+Following on from bodies (as an example), we assume that the bodies of `if` and `else` and `elif` are not allowed to have empty bodies (as body contains variable declarations, if any, followed by statements, so we assume at least one statement).
+
+For example:
+
+```
+main {
+    if ( i < 2 ) then
+    else
+    elif(i >= 2)
+    fi
+};
+```
+
+is invalid
+
 ```
