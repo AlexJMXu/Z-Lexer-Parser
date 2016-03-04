@@ -1,3 +1,3 @@
 main {
-    string = "Missing semi colon for main";
+    foo = "Missing semi colon for main";
 }
