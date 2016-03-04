@@ -98,8 +98,7 @@ statements ::= statements statement
              | /* empty */
              ;
 
-statement ::= global_statement
-            | local_statement
+statement ::= local_statement
             ;
 
 main_statements_prev ::= main_statements_prev global_statement
@@ -125,7 +124,7 @@ global_statement ::= declaration SEMI_COLON
            | alias SEMI_COLON
            ;
 
-function ::= FUNCTION_DEFINITION return_type IDENTIFIER L_PAREN parameter_list R_PAREN L_CURLY_BRACKET statements R_CURLY_BRACKET;
+function ::= FUNCTION_DEFINITION return_type IDENTIFIER L_PAREN parameter_list R_PAREN L_CURLY_BRACKET main_statements_prev local_statement statements R_CURLY_BRACKET;
 
 /* parameter list for function */
 parameter_list ::= declist;
@@ -363,22 +362,22 @@ control_flow ::= forall
                | while
                ;
 
-forall ::= FORALL L_PAREN identifier_children IN identifier_children R_PAREN DO statements OD
+forall ::= FORALL L_PAREN identifier_children IN identifier_children R_PAREN DO main_statements_prev local_statement statements OD
          ;
          
 /* IF statement, 0 or more else ifs, 0 or 1 else, FI */
-conditional ::= IF L_PAREN conditions R_PAREN THEN statements:ss2 elseifs elses FINISH 
+conditional ::= IF L_PAREN conditions R_PAREN THEN main_statements_prev local_statement statements elseifs elses FINISH 
               ;            
 
-elseifs ::= ELSE_IF L_PAREN conditions R_PAREN THEN statements elseifs
+elseifs ::= ELSE_IF L_PAREN conditions R_PAREN THEN main_statements_prev local_statement statements elseifs
           | /* empty */ 
           ;
 
-elses ::= ELSE statements
+elses ::= ELSE main_statements_prev local_statement statements
         | /* empty */
         ;        
 
-while ::= WHILE L_PAREN conditions R_PAREN DO statements OD;
+while ::= WHILE L_PAREN conditions R_PAREN DO main_statements_prev local_statement statements OD;
 
 alias ::= ALIAS datatype identifier_children
         | ALIAS identifier_children identifier_children
