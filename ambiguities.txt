@@ -48,3 +48,37 @@ main {
 ```
 
 is valid
+
+### Main Statement Requirement
+
+We assume that the main function requires at least one statement.
+
+A statement is defined in the language specification as:
+
+* `var = expression ;`
+* `read var ;`
+* `print expression ;`
+* `functionId ( expression_list ) ;`
+* `if ( expression ) then body fi`
+* `if ( expression ) then body else body fi`
+* `if ( expression ) then body`
+* `elif ( expression ) then body else body fi`
+* `while ( expression ) do body od`
+* `forall ( item in iterable ) do body od`
+* `return expression ;`
+
+Therefore, the following code is invalid since it is missing a statement in the main function:
+
+```
+mai {
+    int foo = 5;
+};`
+```
+
+However, if we add the statement `read 5;`, it becomes valid;
+```
+main {
+    int foo = 5;
+    read 5;
+};`
+```
