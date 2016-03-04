@@ -61,10 +61,10 @@ terminal EQ, EQEQ, PLUS, MINUS, MULT, SLASH, CARET, UNDERSCORE, IDENTIFIER, COMM
 terminal NEGATION, AND, OR;
 terminal L_BRACKET, R_BRACKET, L_SQUARE_BRACKET, R_SQUARE_BRACKET, L_CURLY_BRACKET, R_CURLY_BRACKET, L_PAREN, R_PAREN;
 
-nonterminal main_statement, main_statements_prev, statements, statement, program, td;
+nonterminal local_statement, global_statement, main_statements_prev, statements, statement, program, td;
 nonterminal main_function, global_space;
 nonterminal datatype, primitivedatatype, aggregatedatatype;
-nonterminal number, full_exp, dictlistobj, assignment, declaration, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
+nonterminal number, dictlistobj, assignment, declaration, return_type, function, parameter_list, conditional, elseifs, elses, function_call;
 nonterminal listobj;
 nonterminal declist, declist2, declistobj;
 nonterminal seqlistwithoutid, seqlist, seqlist2;
@@ -90,27 +90,27 @@ program ::= main_function
           ; 
 
 /* anything outside the main function can only be an assignment or function */
-global_space ::= global_space full_exp
-               | full_exp
+global_space ::= global_space global_statement
+               | global_statement
                ;
 
 statements ::= statements statement
              | /* empty */
              ;
 
-statement ::= full_exp
-            | main_statement
+statement ::= global_statement
+            | local_statement
             ;
 
-main_statements_prev ::= main_statements_prev full_exp
+main_statements_prev ::= main_statements_prev global_statement
                        | /* empty */
                        ;
 
-main_function ::= MAIN L_CURLY_BRACKET main_statements_prev main_statement statements R_CURLY_BRACKET SEMI_COLON
+main_function ::= MAIN L_CURLY_BRACKET main_statements_prev local_statement statements R_CURLY_BRACKET SEMI_COLON
                 ;
 
 /* statement except for declarations */
-main_statement::= control_flow
+local_statement::= control_flow
                 | print SEMI_COLON
                 | read SEMI_COLON
                 | RETURN SEMI_COLON
@@ -119,7 +119,7 @@ main_statement::= control_flow
                 | assignment SEMI_COLON
                 ;
 
-full_exp ::= declaration SEMI_COLON
+global_statement ::= declaration SEMI_COLON
            | td SEMI_COLON
            | function SEMI_COLON
            | alias SEMI_COLON
